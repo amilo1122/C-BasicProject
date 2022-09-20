@@ -104,6 +104,7 @@ async Task InlineModeProcessing(ITelegramBotClient botClient, CallbackQuery call
 {
     Console.WriteLine($"Receive message type {callbackQuery.Message.Type}");
 
+    // Переделать на работу с массивом делегатов
     switch (callbackQuery.Data)
     {
         case string s when s.StartsWith("mainMenu"):
