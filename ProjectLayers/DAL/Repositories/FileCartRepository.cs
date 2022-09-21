@@ -10,13 +10,13 @@ namespace DAL.Repositories
         private List<Cart> _cart = new List<Cart>();
         BaseRepository cartIndex = new BaseRepository();
 
-        public void Add(int userId, int goodsId, int quantity)
+        public void Add(long userId, int goodsId, int quantity)
         {
             var index = cartIndex.IncrementCartIndex();
             Cart cart = new Cart(index, userId, goodsId, quantity);
             _cart.Add(cart);
         }
-        public void Add(int userId, int goodsId, int quantity, int id)
+        public void Add(long userId, int goodsId, int quantity, int id)
         {
             Cart cart = new Cart(id, userId, goodsId, quantity);
             _cart.Add(cart);
@@ -27,7 +27,7 @@ namespace DAL.Repositories
             return _cart;
         }
 
-        public List<Cart> GetUserCart(int userId)
+        public List<Cart> GetUserCart(long userId)
         {
             var userCart = _cart.Where(x => x.UserId == userId).ToList();
             if (userCart != null)
@@ -40,7 +40,7 @@ namespace DAL.Repositories
             }
         }
 
-        public void UpdateQuantity(int userId, int goodsId, int quantity)
+        public void UpdateQuantity(long userId, int goodsId, int quantity)
         {
             var currentCart = _cart.Single(x => x.UserId == userId && x.GoodsId == goodsId);
             var currentQuantity = currentCart.Quantity;
@@ -61,7 +61,7 @@ namespace DAL.Repositories
             }            
         }
 
-        public void Remove(int userId, int goodsId)
+        public void Remove(long userId, int goodsId)
         {
             var cart = _cart.Single(x => x.UserId == userId && x.GoodsId == goodsId);
             _cart.Remove(cart);

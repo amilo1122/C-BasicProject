@@ -11,7 +11,7 @@ namespace DAL.Repositories
         BaseRepository orderIndex = new BaseRepository();
         BaseRepository orderItemsIndex = new BaseRepository();
 
-        public int Add(int userId, decimal totalSum)
+        public int Add(long userId, decimal totalSum)
         {
             Order order = new Order();
             order.Id = orderIndex.IncrementOrderIndex();
@@ -22,7 +22,7 @@ namespace DAL.Repositories
             return order.Id;
         }
 
-        public int Add(int userId, decimal totalSum, int id, DateTime date)
+        public int Add(long userId, decimal totalSum, int id, DateTime date)
         {
             Order order = new Order();
             order.Id = id;
@@ -65,7 +65,7 @@ namespace DAL.Repositories
             }
         }
 
-        public List<Order> GetUserOrders(int userdId)
+        public List<Order> GetUserOrders(long userdId)
         {
             return _orders.Where(x => x.UserId == userdId).ToList();
         }

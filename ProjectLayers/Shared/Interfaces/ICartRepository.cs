@@ -5,11 +5,11 @@ namespace Shared.Interfaces
 {
     public interface ICartRepository
     {
-        void Add(int userId, int goodsId, int quantity);
-        void Add(int userId, int goodsId, int quantity, int id);
-        void Remove(int userId, int goodsId);
-        void UpdateQuantity(int userId, int goodsId, int quantity);
-        List<Cart> GetUserCart(int userId);
+        void Add(long userId, int goodsId, int quantity);
+        void Add(long userId, int goodsId, int quantity, int id);
+        void Remove(long userId, int goodsId);
+        void UpdateQuantity(long userId, int goodsId, int quantity);
+        List<Cart> GetUserCart(long userId);
         List<Cart> GetAllCart();
     }
 }

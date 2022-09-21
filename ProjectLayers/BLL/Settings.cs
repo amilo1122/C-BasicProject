@@ -25,7 +25,7 @@ namespace BLL
 
         #region Menus
         // Загружаем главного меню в UI с проверкой роли
-        public string LoadMainMenu(int id)
+        public string LoadMainMenu(long id)
         {
             MainMenu mainMenu = new MainMenu();
             var userMenu = mainMenu.GetMainMenu(usersRepo.CheckUser(id));
@@ -106,7 +106,7 @@ namespace BLL
         }
 
         // Изменяем количество выбранного товара в корзине пользователя
-        public void ChangeQuantity(int userId, int goodId, int quantity)
+        public void ChangeQuantity(long userId, int goodId, int quantity)
         {
             cartRepo.UpdateQuantity(userId, goodId, quantity);
             SaveCart();
@@ -280,7 +280,7 @@ namespace BLL
         }
 
         // Добавляем товар и его количество в корзину
-        public void AddToCart(int userId, int goodsId, int quantity)
+        public void AddToCart(long userId, int goodsId, int quantity)
         {
             var userCart = cartRepo.GetUserCart(userId);
 
@@ -296,7 +296,7 @@ namespace BLL
         }
 
         // Возвращаем список товаров корзины
-        public List<GoodsView> GetCart(int userId)
+        public List<GoodsView> GetCart(long userId)
         {
             List<GoodsView> cartView = new List<GoodsView>();
             var userCart = cartRepo.GetUserCart(userId);
@@ -315,14 +315,14 @@ namespace BLL
         }
 
         // Удаляем товар по id из корзины пользователя
-        public void RemoveGoodFromCart(int userId, int goodId)
+        public void RemoveGoodFromCart(long userId, int goodId)
         {
             DeleteGoodCartIni(userId, goodId);
             cartRepo.Remove(userId, goodId);
         }
 
         // Очищаем корзину пользователя
-        public void ClearUserCart(int userId)
+        public void ClearUserCart(long userId)
         {
             var userCart = cartRepo.GetUserCart(userId);
             foreach (var item in userCart)
@@ -333,7 +333,7 @@ namespace BLL
         }
 
         // Уменьшаем доступное количество товара и обновляем корзину текущего пользователя
-        private decimal ReserveGoods(int userId)
+        private decimal ReserveGoods(long userId)
         {
             var userCart = cartRepo.GetUserCart(userId);
             decimal totalSum = 0;
@@ -356,7 +356,7 @@ namespace BLL
         }
 
         // Удаляем товар по id из файла корзины пользователя
-        private void DeleteGoodCartIni(int userId, int goodId)
+        private void DeleteGoodCartIni(long userId, int goodId)
         {
             CartIni = new IniFile(cartFileName);
             var userCart = cartRepo.GetUserCart(userId);
@@ -395,7 +395,7 @@ namespace BLL
             {
                 foreach (var s in cartSection)
                 {
-                    cartRepo.Add(Int32.Parse(CartIni.Read("UserId", s)), Int32.Parse(CartIni.Read("GoodsId", s)), Int32.Parse(CartIni.Read("Quantity", s)), Int32.Parse(CartIni.Read("Id", s)));
+                    cartRepo.Add(Int64.Parse(CartIni.Read("UserId", s)), Int32.Parse(CartIni.Read("GoodsId", s)), Int32.Parse(CartIni.Read("Quantity", s)), Int32.Parse(CartIni.Read("Id", s)));
                 }
             }
         }
@@ -420,7 +420,7 @@ namespace BLL
         }
 
         // Создаем нового пользователя
-        public bool AddUser(int id, Role role)
+        public bool AddUser(long id, Role role)
         {
             var flag = usersRepo.Add(id, role);
             SaveUsers();
@@ -428,7 +428,7 @@ namespace BLL
         }
 
         // Меняем роль существующего пользователя
-        public void ChangeRole(int id, Role role)
+        public void ChangeRole(long id, Role role)
         {
             usersRepo.ChangeRole(id, role);
             SaveUsers();
@@ -441,7 +441,7 @@ namespace BLL
         }
 
         // Удаляем пользователя по id
-        public void DeleteUser(int id)
+        public void DeleteUser(long id)
         {
             usersRepo.Delete(id);
             SaveUsers();
@@ -473,7 +473,7 @@ namespace BLL
             {
                 foreach (var s in usersSection)
                 {
-                    usersRepo.Add(new User(Int32.Parse(UsersIni.Read("Id", s)), Enum.Parse<Role>(UsersIni.Read("Role", s))));
+                    usersRepo.Add(new User(Int64.Parse(UsersIni.Read("Id", s)), Enum.Parse<Role>(UsersIni.Read("Role", s))));
                 }
             }
         }
@@ -562,7 +562,7 @@ namespace BLL
         }
         
         // Сформировать заказ
-        public Order AddOrder(int userId)
+        public Order AddOrder(long userId)
         {
             var totalSum = ReserveGoods(userId);
             var orderId = orderRepo.Add(userId, totalSum);
@@ -584,7 +584,7 @@ namespace BLL
         } 
 
         // Возвращаем список всех заказов пользователя
-        public List<Order> GetOrders(int userId)
+        public List<Order> GetOrders(long userId)
         {
             return orderRepo.GetUserOrders(userId);
         }
@@ -638,7 +638,7 @@ namespace BLL
             {
                 foreach (var s in ordersSection)
                 {
-                    var userId = Int32.Parse(OrdersIni.Read("UserId", s));
+                    var userId = Int64.Parse(OrdersIni.Read("UserId", s));
                     var totalSum = Decimal.Parse(OrdersIni.Read("TotalSum", s));
                     var id = Int32.Parse(OrdersIni.Read("Id", s));
                     var date = Convert.ToDateTime(OrdersIni.Read("CreatedDate", s));

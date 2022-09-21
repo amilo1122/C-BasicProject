@@ -1,10 +1,10 @@
 ﻿namespace Shared.Models
 {    public class User
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
         public Role Role { get; set; }
 
-        public User(int id, Role role)
+        public User(long id, Role role)
         {
             Id = id;
             Role = role;

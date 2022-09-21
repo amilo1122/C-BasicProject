@@ -21,17 +21,17 @@ using var cts = new CancellationTokenSource();
 // Объявляем переменную статуса
 var State = 0;
 // Объявляем словарь для обработки меню ролей пользователя
-Dictionary<int, bool> _changeRoleDict = new Dictionary<int, bool>();
+Dictionary<long, bool> _changeRoleDict = new Dictionary<long, bool>();
 // Объявляем словарь для обработки меню ролей пользователя
-Dictionary<int, bool> _addUserDict = new Dictionary<int, bool>();
+Dictionary<long, bool> _addUserDict = new Dictionary<long, bool>();
 // Объявляем словарь для хранения выбранного id товара
-Dictionary<int, int> _goodIdDict = new Dictionary<int, int>();
+Dictionary<long, int> _goodIdDict = new Dictionary<long, int>();
 // Объявляем словарь для хранения выбранного наименования категории
-Dictionary<int, string> _categoryNameDict = new Dictionary<int, string>();
+Dictionary<long, string> _categoryNameDict = new Dictionary<long, string>();
 // Объявляем словарь для хранения реквизитов нового товара
-Dictionary<int, Good> _goodsDict = new Dictionary<int, Good>();
+Dictionary<long, Good> _goodsDict = new Dictionary<long, Good>();
 // Объявляем словарь для хранения id пользователя
-Dictionary<int, int> _userIdDict = new Dictionary<int, int>();
+Dictionary<long, int> _userIdDict = new Dictionary<long, int>();
 // Объявляем массив методов для обработки сообщений от пользователей
 List<Method> methods = new List<Method>()
 {
@@ -243,8 +243,7 @@ async Task InlineModeProcessing(ITelegramBotClient botClient, CallbackQuery call
             break;
         case string s when s.StartsWith("userToChange"):
             Console.WriteLine(callbackQuery.Id);
-            await CheckAddUserFlag(botClient, callbackQuery);
-            
+            await CheckAddUserFlag(botClient, callbackQuery);            
             break;
         case string s when (s.StartsWith("Administrator") || s.StartsWith("Manager") || s.StartsWith("Customer")):
             Console.WriteLine(callbackQuery.Id);
@@ -272,7 +271,8 @@ string ReadApiKey(string path)
 // Проверяем метод вызова
 async Task CheckAddUserFlag(ITelegramBotClient botClient, CallbackQuery callbackQuery)
 {
-    if (_addUserDict[(int)callbackQuery.Message.Chat.Id])
+    var id = callbackQuery.Message.Chat.Id;
+    if (_addUserDict[id])
     {
         await SaveSelectedUser(botClient, callbackQuery);
         await DisplayUserRoles(botClient, callbackQuery.Message);
@@ -290,32 +290,35 @@ async Task CheckAddUserFlag(ITelegramBotClient botClient, CallbackQuery callback
 // Устанавливаем флаг о новом пользователе
 void SetNewUserFlag(CallbackQuery callbackQuery, bool flag)
 {
-    if (_addUserDict.ContainsKey((int)callbackQuery.Message.Chat.Id))
+    var id = callbackQuery.Message.Chat.Id;
+    if (_addUserDict.ContainsKey(id))
     {
-        _addUserDict.Remove((int)callbackQuery.Message.Chat.Id);
+        _addUserDict.Remove(id);
     }
-    _addUserDict[(int)callbackQuery.Message.Chat.Id] = flag;
+    _addUserDict[id] = flag;
 }
 
 // Сохраняем выбранного пользователя в словарь
 async Task SaveSelectedUser(ITelegramBotClient botClient, CallbackQuery callbackQuery)
 {
     var userId = Int32.Parse(callbackQuery.Data.Replace("userToChange", ""));
-    if (_userIdDict.ContainsKey((int)callbackQuery.Message.Chat.Id))
+    var id = callbackQuery.Message.Chat.Id;
+    if (_userIdDict.ContainsKey(id))
     {
-        _userIdDict.Remove((int)callbackQuery.Message.Chat.Id);
+        _userIdDict.Remove(id);
     }
-    _userIdDict[(int)callbackQuery.Message.Chat.Id] = userId;
+    _userIdDict[id] = userId;
 }
 
 // Устанавливаем флаг о новой роли
 void SetChangeRoleFlag(CallbackQuery callbackQuery, bool flag)
 {
-    if (_changeRoleDict.ContainsKey((int)callbackQuery.Message.Chat.Id))
+    var id = callbackQuery.Message.Chat.Id;
+    if (_changeRoleDict.ContainsKey(id))
     {
-        _changeRoleDict.Remove((int)callbackQuery.Message.Chat.Id);
+        _changeRoleDict.Remove(id);
     }
-    _changeRoleDict[(int)callbackQuery.Message.Chat.Id] = flag;
+    _changeRoleDict[id] = flag;
 }
 
 // Выводим список пользователей
@@ -341,7 +344,8 @@ async Task DisplayUsers(ITelegramBotClient botClient, Message message)
 // Создаем нового пользователя
 async Task CreateNewUser(ITelegramBotClient botClient, CallbackQuery callbackQuery)
 {
-    var flag = settings.AddUser(_userIdDict[(int)callbackQuery.Message.Chat.Id], Enum.Parse<Role>(callbackQuery.Data));
+    var id = callbackQuery.Message.Chat.Id;
+    var flag = settings.AddUser(_userIdDict[id], Enum.Parse<Role>(callbackQuery.Data));
     if (flag)
     {
         await botClient.SendTextMessageAsync(callbackQuery.Message.Chat.Id, "Новый пользователь добавлен");        
@@ -356,7 +360,8 @@ async Task CreateNewUser(ITelegramBotClient botClient, CallbackQuery callbackQue
 // Проверяем метод вызова
 async Task CheckChangeRoleFlag(ITelegramBotClient botClient, CallbackQuery callbackQuery)
 {
-    if (_changeRoleDict[(int)callbackQuery.Message.Chat.Id])
+    var id = callbackQuery.Message.Chat.Id;
+    if (_changeRoleDict[id])
     {
         await ChangeUserRole(botClient, callbackQuery);
     }
@@ -376,7 +381,8 @@ async Task RequestNewUserId(ITelegramBotClient botClient, CallbackQuery callback
 // Изменяем роль существующего пользователя
 async Task ChangeUserRole(ITelegramBotClient botClient, CallbackQuery callbackQuery)
 {
-    settings.ChangeRole(_userIdDict[(int)callbackQuery.Message.Chat.Id], Enum.Parse<Role>(callbackQuery.Data));
+    var id = callbackQuery.Message.Chat.Id;
+    settings.ChangeRole(_userIdDict[id], Enum.Parse<Role>(callbackQuery.Data));
     await botClient.SendTextMessageAsync(callbackQuery.Message.Chat.Id, "Роль пользователя изменена:");
 
     await LoadMainMenu(botClient, callbackQuery.Message);
@@ -436,13 +442,14 @@ async Task ChangeGoodNewName(ITelegramBotClient botClient, CallbackQuery callbac
 async Task ChangeGoodNewCategoryName(ITelegramBotClient botClient, CallbackQuery callbackQuery)
 {
     var categoryId = Int32.Parse(callbackQuery.Data.Replace("changeGoodNewCategory", ""));
-    if (!_goodIdDict.ContainsKey((int)callbackQuery.Message.Chat.Id))
+    var id = callbackQuery.Message.Chat.Id;
+    if (!_goodIdDict.ContainsKey(id))
     {
         await botClient.SendTextMessageAsync(callbackQuery.Message.Chat.Id, "Сначала выберите товар для изменения!");
         return;
     }
-    settings.ChangeGoodCategoryId(_goodIdDict[(int)callbackQuery.Message.Chat.Id], categoryId);
-    _goodIdDict.Remove((int)callbackQuery.Message.Chat.Id);
+    settings.ChangeGoodCategoryId(_goodIdDict[id], categoryId);
+    _goodIdDict.Remove(id);
 
     await botClient.SendTextMessageAsync(callbackQuery.Message.Chat.Id, "Категория товара изменена");
     await LoadMainMenu(botClient, callbackQuery.Message);
@@ -472,12 +479,13 @@ async Task DisplayCategoriesListToChange(ITelegramBotClient botClient, CallbackQ
 // Сохраняем выбранный товар в словарь и выводим кнопки меню изменения товара
 async Task LoadChangeGoodMenu(ITelegramBotClient botClient, CallbackQuery callbackQuery)
 {
-    var id = Int32.Parse(callbackQuery.Data.Replace("goodToChange", ""));
-    if (_goodIdDict.ContainsKey((int)callbackQuery.Message.Chat.Id))
+    var goodId = Int32.Parse(callbackQuery.Data.Replace("goodToChange", ""));
+    var id = callbackQuery.Message.Chat.Id;
+    if (_goodIdDict.ContainsKey(id))
     {
-        _goodIdDict.Remove((int)callbackQuery.Message.Chat.Id);
+        _goodIdDict.Remove(id);
     }
-    _goodIdDict[(int)callbackQuery.Message.Chat.Id] = id;
+    _goodIdDict[id] = goodId;
     
     List<Menu> changeGoodMenu = JsonSerializer.Deserialize<List<Menu>>(settings.LoadChangeGoodMenu());
     List<InlineKeyboardButton> buttons = new List<InlineKeyboardButton>();
@@ -551,7 +559,8 @@ async Task RequestNewCategoryName(ITelegramBotClient botClient, CallbackQuery ca
 // Выводим список заказов пользователя
 async Task DisplayMyOrders(ITelegramBotClient botClient, CallbackQuery callbackQuery)
 {
-    var userOrders = settings.GetOrders((int)callbackQuery.From.Id);
+    var id = callbackQuery.Message.Chat.Id;
+    var userOrders = settings.GetOrders(id);
 
     foreach (var order in userOrders)
     {
@@ -577,7 +586,8 @@ async Task DisplayMyOrders(ITelegramBotClient botClient, CallbackQuery callbackQ
 // Формируем заказ и выводим список его товаров
 async Task Checkout(ITelegramBotClient botClient, CallbackQuery callbackQuery)
 {
-    var currentOrder = settings.AddOrder((int)callbackQuery.From.Id);
+    var id = callbackQuery.Message.Chat.Id;
+    var currentOrder = settings.AddOrder(id);
     var orderItems = settings.GetOrderView(currentOrder.Id);
 
     await botClient.SendTextMessageAsync(callbackQuery.Message.Chat.Id, "Ваш заказ:");
@@ -612,21 +622,24 @@ async Task Checkout(ITelegramBotClient botClient, CallbackQuery callbackQuery)
 // Уменьшаем количество выбранного товара 
 async Task ReduceQuantity(ITelegramBotClient botClient, CallbackQuery callbackQuery)
 {
-    settings.ChangeQuantity((int)callbackQuery.From.Id, _goodIdDict[(int)callbackQuery.From.Id], -1);
+    var id = callbackQuery.Message.Chat.Id;
+    settings.ChangeQuantity(id, _goodIdDict[id], -1);
     await DisplayCart(botClient, callbackQuery);
 }
 
 // Увеличиваем количество выбранного товара 
 async Task IncreaseQuantity(ITelegramBotClient botClient, CallbackQuery callbackQuery)
 {
-    settings.ChangeQuantity((int)callbackQuery.From.Id, _goodIdDict[(int)callbackQuery.From.Id], 1);
+    var id = callbackQuery.Message.Chat.Id;
+    settings.ChangeQuantity(id, _goodIdDict[id], 1);
     await DisplayCart(botClient, callbackQuery);
 }
 
 // Удаляем выбранный товар из корзины и файла
 async Task DeleteGoodFromCart(ITelegramBotClient botClient, CallbackQuery callbackQuery)
 {
-    settings.RemoveGoodFromCart((int)callbackQuery.From.Id, _goodIdDict[(int)callbackQuery.From.Id]);
+    var id = callbackQuery.Message.Chat.Id;
+    settings.RemoveGoodFromCart(id, _goodIdDict[id]);
     await botClient.SendTextMessageAsync(callbackQuery.Message.Chat.Id, "Товар удален из корзины...");
     await DisplayCart(botClient, callbackQuery);
 }
@@ -642,7 +655,8 @@ async Task DisplayChangeQuantityButtons(ITelegramBotClient botClient, CallbackQu
         buttons.Add(InlineKeyboardButton.WithCallbackData(text: button.Name, callbackData: button.Callback));
     }
 
-    var selectedGood = settings.GetCart((int)callbackQuery.From.Id).Single(x => x.GoodId == _goodIdDict[(int)callbackQuery.From.Id]);
+    var id = callbackQuery.Message.Chat.Id;
+    var selectedGood = settings.GetCart(id).Single(x => x.GoodId == _goodIdDict[id]);
     InlineKeyboardMarkup changeQuantityKeyboard = new InlineKeyboardMarkup(SetTwoColumnsMenu(buttons).ToArray());
     await botClient.SendTextMessageAsync(callbackQuery.Message.Chat.Id, "Измените количество", replyMarkup: changeQuantityKeyboard);
     await botClient.SendTextMessageAsync(
@@ -664,8 +678,9 @@ async Task DisplayCart(ITelegramBotClient botClient, CallbackQuery callbackQuery
 {
     List<Menu> cartMenu = JsonSerializer.Deserialize<List<Menu>>(settings.LoadCartMenu());
     List<InlineKeyboardButton> buttons = new List<InlineKeyboardButton>();
-    
-    var userCart = settings.GetCart((int)callbackQuery.From.Id);
+
+    var id = callbackQuery.Message.Chat.Id;
+    var userCart = settings.GetCart(id);
 
     await botClient.SendTextMessageAsync(callbackQuery.Message.Chat.Id, "<<<Ваша корзина>>>");
     decimal totalPrice = 0;
@@ -695,8 +710,9 @@ async Task DisplayCart(ITelegramBotClient botClient, CallbackQuery callbackQuery
 // Добавляем выбранный товар в корзину текущего пользователя
 async Task AddToCart(ITelegramBotClient botClient, CallbackQuery callbackQuery)
 {
+    var id = callbackQuery.Message.Chat.Id;
     int goodId = Int32.Parse(callbackQuery.Data.Replace("addToCart",""));
-    settings.AddToCart((int)callbackQuery.From.Id, goodId, 1);
+    settings.AddToCart(id, goodId, 1);
     await botClient.SendTextMessageAsync(callbackQuery.Message.Chat.Id, "Товар добавлен в корзину");
 }
 
@@ -786,9 +802,10 @@ async Task OnMessageProcessing(ITelegramBotClient botClient, Message message)
 // Запрашиваем роль нового пользователя
 async Task RequestNewUserRole(ITelegramBotClient botClient, Message message)
 {
-    if (Int32.TryParse(message.Text, out int id))
+    if (Int32.TryParse(message.Text, out int userId))
     {
-        _userIdDict[(int)message.Chat.Id] = id;
+        var id = message.Chat.Id;
+        _userIdDict[id] = userId;
         await DisplayUserRoles(botClient, message);
     }
     else
@@ -802,7 +819,8 @@ async Task SetNewGoodUrl(ITelegramBotClient botClient, Message message)
 {
     if (CheckUrl(message.Text))
     {
-        settings.ChangeGoodUrl(_goodIdDict[(int)message.Chat.Id], message.Text);
+        var id = message.Chat.Id;
+        settings.ChangeGoodUrl(_goodIdDict[id], message.Text);
         await botClient.SendTextMessageAsync((message.Chat.Id), "Ссылка на изображение товара изменена");
     }
     else
@@ -818,7 +836,8 @@ async Task SetNewGoodQuantity(ITelegramBotClient botClient, Message message)
 {
     if (Int32.TryParse(message.Text, out int quantity))
     {
-        settings.ChangeQuantity(_goodIdDict[(int)message.Chat.Id], quantity);
+        var id = message.Chat.Id;
+        settings.ChangeQuantity(_goodIdDict[id], quantity);
         await botClient.SendTextMessageAsync(message.Chat.Id, "Количество доступного товара изменено");
 
         await LoadMainMenu(botClient, message);
@@ -834,7 +853,8 @@ async Task SetNewGoodPrice(ITelegramBotClient botClient, Message message)
 {
     if (Decimal.TryParse(message.Text, out decimal price))
     {
-        settings.ChangeGoodPrice(_goodIdDict[(int)message.Chat.Id], price);
+        var id = message.Chat.Id;
+        settings.ChangeGoodPrice(_goodIdDict[id], price);
         await botClient.SendTextMessageAsync(message.Chat.Id, "Стоимость товара изменен");
 
         await LoadMainMenu(botClient, message);
@@ -848,7 +868,8 @@ async Task SetNewGoodPrice(ITelegramBotClient botClient, Message message)
 // Меняем описание товара
 async Task SetNewGoodDescription(ITelegramBotClient botClient, Message message)
 {
-    settings.ChangeGoodDescription(_goodIdDict[(int)message.Chat.Id], message.Text);
+    var id = message.Chat.Id;
+    settings.ChangeGoodDescription(_goodIdDict[id], message.Text);
     await botClient.SendTextMessageAsync(message.Chat.Id, "Описание товара изменено");
 
     await LoadMainMenu(botClient, message);
@@ -859,7 +880,8 @@ async Task SetNewGoodName(ITelegramBotClient botClient, Message message)
 {
     if (!String.IsNullOrEmpty(message.Text))
     {
-        settings.ChangeGoodName(_goodIdDict[(int)message.Chat.Id], message.Text);
+        var id = message.Chat.Id;
+        settings.ChangeGoodName(_goodIdDict[id], message.Text);
         await botClient.SendTextMessageAsync(message.Chat.Id, "Наименование товара изменено");
     }
     else
@@ -891,23 +913,24 @@ async Task GetGoodUrl(ITelegramBotClient botClient, Message message)
 {
     if (CheckUrl(message.Text))
     {
-        Good good = _goodsDict[(int)message.Chat.Id];
+        var id = message.Chat.Id;
+        Good good = _goodsDict[id];
         var categoryId = good.CategoryId;
         var name = good.Name;
         var description = good.Description;
         var price = good.Price;
         var quantity = good.Quantity;
         var url = message.Text;
-        _goodsDict.Remove((int)message.Chat.Id);
+        _goodsDict.Remove(id);
         good.CategoryId = categoryId;
         good.Name = name;
         good.Description = description;
         good.Price = price;
         good.Quantity = quantity;
         good.Url = url;
-        _goodsDict[(int)message.Chat.Id] = good;
+        _goodsDict[id] = good;
         settings.AddGood(categoryId, name, description, price, quantity, url);
-        _goodsDict.Remove((int)message.Chat.Id);
+        _goodsDict.Remove(id);
 
         await botClient.SendTextMessageAsync(message.Chat.Id, "Новый товар успешно добавлен");
         State = 0;
@@ -936,18 +959,19 @@ async Task GetGoodQuantity(ITelegramBotClient botClient, Message message)
     bool flag = Int32.TryParse(message.Text, out int quantity);
     if (flag && quantity > 0)
     {
-        Good good = _goodsDict[(int)message.Chat.Id];
+        var id = message.Chat.Id;
+        Good good = _goodsDict[id];
         var categoryId = good.CategoryId;
         var name = good.Name;
         var description = good.Description;
         var price = good.Price;
-        _goodsDict.Remove((int)message.Chat.Id);
+        _goodsDict.Remove(id);
         good.CategoryId = categoryId;
         good.Name = name;
         good.Description = description;
         good.Price = price;
         good.Quantity = quantity;
-        _goodsDict[(int)message.Chat.Id] = good;
+        _goodsDict[id] = good;
         await botClient.SendTextMessageAsync(message.Chat.Id, "Введите ссылку на изображение:");
         State = 11;
     }
@@ -963,16 +987,17 @@ async Task GetGoodPrice(ITelegramBotClient botClient, Message message)
     bool flag = Decimal.TryParse(message.Text, out decimal price);
     if (flag && price > 0)
     {
-        Good good = _goodsDict[(int)message.Chat.Id];
+        var id = message.Chat.Id;
+        Good good = _goodsDict[id];
         var categoryId = good.CategoryId;
         var name = good.Name;
         var description = good.Description;
-        _goodsDict.Remove((int)message.Chat.Id);
+        _goodsDict.Remove(id);
         good.CategoryId = categoryId;
         good.Name = name;
         good.Description = description;
         good.Price = price;
-        _goodsDict[(int)message.Chat.Id] = good;
+        _goodsDict[id] = good;
         await botClient.SendTextMessageAsync(message.Chat.Id, "Введите количество товара:");
         State = 10;
     }
@@ -985,14 +1010,15 @@ async Task GetGoodPrice(ITelegramBotClient botClient, Message message)
 // Получаем описание нового товара
 async Task GetGoodDescription(ITelegramBotClient botClient, Message message)
 {
-    Good good = _goodsDict[(int)message.Chat.Id];
+    var id = message.Chat.Id;
+    Good good = _goodsDict[id];
     var categoryId = good.CategoryId;
     var name = good.Name;
-    _goodsDict.Remove((int)message.Chat.Id);
+    _goodsDict.Remove(id);
     good.CategoryId = categoryId;
     good.Name = name;
     good.Description = message.Text;
-    _goodsDict[(int)message.Chat.Id] = good;
+    _goodsDict[id] = good;
     await botClient.SendTextMessageAsync(message.Chat.Id, "Введите стоимость товара:");
     State = 9;
 }
@@ -1002,12 +1028,13 @@ async Task GetGoodName(ITelegramBotClient botClient, Message message)
 {
     if (!String.IsNullOrEmpty(message.Text))
     {
-        Good good = _goodsDict[(int)message.Chat.Id];
+        var id = message.Chat.Id;
+        Good good = _goodsDict[id];
         var categoryId = good.CategoryId;
-        _goodsDict.Remove((int)message.Chat.Id);
+        _goodsDict.Remove(id);
         good.CategoryId = categoryId;
         good.Name = message.Text;
-        _goodsDict[(int)message.Chat.Id] = good;
+        _goodsDict[id] = good;
         await botClient.SendTextMessageAsync(message.Chat.Id, "Введите описание товара:");
         State = 8;
     }
@@ -1022,11 +1049,12 @@ async Task CheckCategory(ITelegramBotClient botClient, Message message)
 {
     if (settings.CategoryExists(message.Text))
     {
+        var id = message.Chat.Id;
         await botClient.SendTextMessageAsync(message.Chat.Id, "Введите наименование товара:");
         Good good = new Good();
         var categoryId = settings.GetCategoryId(message.Text);
         good.CategoryId = categoryId;
-        _goodsDict[(int)message.Chat.Id] = good;
+        _goodsDict[id] = good;
         State = 7;
     }
     else
@@ -1040,8 +1068,9 @@ async Task CategoryExists(ITelegramBotClient botClient, Message message)
 {
     if (settings.CategoryExists(message.Text))
     {
+        var id = message.Chat.Id;
         await botClient.SendTextMessageAsync(message.Chat.Id, "Введите новое имя категории:");
-        _categoryNameDict[(int)message.Chat.Id] = message.Text;
+        _categoryNameDict[id] = message.Text;
         State = 5;
     }
     else
@@ -1053,8 +1082,9 @@ async Task CategoryExists(ITelegramBotClient botClient, Message message)
 // Переименовываем выбранную категорию
 async Task RenameCategory(ITelegramBotClient botClient, Message message)
 {
-    settings.RenameCategory(_categoryNameDict[(int)message.Chat.Id], message.Text);
-    _categoryNameDict.Remove((int)message.Chat.Id);
+    var id = message.Chat.Id;
+    settings.RenameCategory(_categoryNameDict[id], message.Text);
+    _categoryNameDict.Remove(id);
 
     await botClient.SendTextMessageAsync(message.Chat.Id, "Категория изменена");
 
@@ -1112,13 +1142,14 @@ async Task SetGood(ITelegramBotClient botClient, Message message)
     int usetInput; 
     if(Int32.TryParse(message.Text, out usetInput))
     {
-        if (settings.GetCart((int)message.Chat.Id).Exists(x => x.GoodId == usetInput))
+        var id = message.Chat.Id;
+        if (settings.GetCart(id).Exists(x => x.GoodId == usetInput))
         {
-            if (_goodIdDict.ContainsKey((int)message.Chat.Id))
+            if (_goodIdDict.ContainsKey(id))
             {
-                _goodIdDict.Remove((int)message.Chat.Id);
+                _goodIdDict.Remove(id);
             }
-            _goodIdDict[(int)message.Chat.Id] = usetInput;
+            _goodIdDict[id] = usetInput;
             State = 0;
             await DisplayCartChangeMenu(botClient, message);
         }
@@ -1136,7 +1167,8 @@ async Task SetGood(ITelegramBotClient botClient, Message message)
 // Выводим кнопки главного меню
 async Task LoadMainMenu(ITelegramBotClient botClient, Message message)
 {
-    List<Menu> mainMenu = JsonSerializer.Deserialize<List<Menu>>(settings.LoadMainMenu((int)message.Chat.Id));
+    var id = message.Chat.Id;
+    List<Menu> mainMenu = JsonSerializer.Deserialize<List<Menu>>(settings.LoadMainMenu(id));
     List<InlineKeyboardButton> buttons = new List<InlineKeyboardButton>();
 
     foreach (var button in mainMenu)

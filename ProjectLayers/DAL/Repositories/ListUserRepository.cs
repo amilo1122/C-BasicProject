@@ -8,7 +8,7 @@ namespace DAL.Repositories
         private static List<User> _users = new List<User>();
 
         // Выдаем роль пользоывателя по id
-        public Role CheckUser(int id)
+        public Role CheckUser(long id)
         {
             if (GetUser(id) != null)
             {
@@ -22,7 +22,7 @@ namespace DAL.Repositories
         }
 
         // Меняем роль пользователя по id
-        public void ChangeRole(int id, Role role)
+        public void ChangeRole(long id, Role role)
         {
             if (GetUser(id) != null)
             {
@@ -43,7 +43,7 @@ namespace DAL.Repositories
         }
 
         // Добавляем нового пользователя или false, если существует
-        public bool Add(int id, Role role)
+        public bool Add(long id, Role role)
         {
             if(GetUser(id) == null)
             {
@@ -58,7 +58,7 @@ namespace DAL.Repositories
         }
 
         // Удаляем пользователя из репозитория
-        public void Delete(int id)
+        public void Delete(long id)
         {
             var user = GetUser(id);
             if (user != null)
@@ -68,7 +68,7 @@ namespace DAL.Repositories
         }
 
         // Выдаем пользователя по его id
-        private User GetUser(int id)
+        private User GetUser(long id)
         {
             var flag = _users.Any(u => u.Id == id);
             if (flag)
