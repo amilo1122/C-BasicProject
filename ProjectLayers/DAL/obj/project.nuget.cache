@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "W7snUR+H+HfDHfCbKwtqvIxjZU0lZ1p+M+AJ1nTrnRXs5jrRQSdzhqk0NETa5Ufk2O3gXIrQWznmEjxIBN5wQQ==",
+  "dgSpecHash": "ofLpG+OZe/hbKhQll2ncybCeXY6yap5NZXBIBKN60k2Y3Vyaj77d923bjF5I4GEtNU0ZkwSeh7VBfHNd7QZ6oA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Ilya\\source\\repos\\C#Project\\C-BasicProject\\ProjectLayers\\DAL\\DAL.csproj",
+  "projectFilePath": "C:\\Users\\Ilya\\source\\repos\\C#Project\\ProjectLayers\\DAL\\DAL.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Ilya\\.nuget\\packages\\newtonsoft.json\\12.0.2\\newtonsoft.json.12.0.2.nupkg.sha512",
     "C:\\Users\\Ilya\\.nuget\\packages\\system.threading.channels\\6.0.0\\system.threading.channels.6.0.0.nupkg.sha512",

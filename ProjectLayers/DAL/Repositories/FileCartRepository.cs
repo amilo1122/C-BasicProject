@@ -12,11 +12,14 @@ namespace DAL.Repositories
 
         public void Add(int userId, int goodsId, int quantity)
         {
-            _cart.Add(new Cart(cartIndex.IncrementCartIndex(), userId, goodsId, quantity));
+            var index = cartIndex.IncrementCartIndex();
+            Cart cart = new Cart(index, userId, goodsId, quantity);
+            _cart.Add(cart);
         }
         public void Add(int userId, int goodsId, int quantity, int id)
         {
-            _cart.Add(new Cart(id, userId, goodsId, quantity));
+            Cart cart = new Cart(id, userId, goodsId, quantity);
+            _cart.Add(cart);
         }
 
         public List<Cart> GetAllCart()
@@ -26,9 +29,10 @@ namespace DAL.Repositories
 
         public List<Cart> GetUserCart(int userId)
         {
-            if (_cart.Select(x => x.UserId == userId).ToList() != null)
+            var userCart = _cart.Where(x => x.UserId == userId).ToList();
+            if (userCart != null)
             {
-                return _cart.Where(x => x.UserId == userId).ToList();
+                return userCart;
             }
             else
             {
@@ -38,27 +42,29 @@ namespace DAL.Repositories
 
         public void UpdateQuantity(int userId, int goodsId, int quantity)
         {
-            int currentQuantity = _cart.Single(x => x.UserId == userId && x.GoodsId == goodsId).Quantity;
+            var currentCart = _cart.Single(x => x.UserId == userId && x.GoodsId == goodsId);
+            var currentQuantity = currentCart.Quantity;
             if (quantity == 1)
             {
-                _cart.Single(x => x.UserId == userId && x.GoodsId == goodsId).Quantity++;
+                currentQuantity++;
             }
             else if (quantity == -1)
             {
                 if (currentQuantity == 1)
                 {
-                    _cart.Remove(_cart.Single(x => x.UserId == userId && x.GoodsId == goodsId));
+                    _cart.Remove(currentCart);
                 }
                 else
                 {
-                    _cart.Single(x => x.UserId == userId && x.GoodsId == goodsId).Quantity--;
+                    currentQuantity--;
                 }                
             }            
         }
 
         public void Remove(int userId, int goodsId)
         {
-            _cart.Remove(_cart.Single(x => x.UserId == userId && x.GoodsId == goodsId));
+            var cart = _cart.Single(x => x.UserId == userId && x.GoodsId == goodsId);
+            _cart.Remove(cart);
         }
     }
 }

@@ -47,7 +47,8 @@ namespace DAL.Repositories
         {
             if(GetUser(id) == null)
             {
-                _users.Add(new User(id, role));
+                User user = new User(id, role);
+                _users.Add(user);
                 return true;
             }
             else
@@ -69,7 +70,8 @@ namespace DAL.Repositories
         // Выдаем пользователя по его id
         private User GetUser(int id)
         {
-            if (_users.Any(u => u.Id == id))
+            var flag = _users.Any(u => u.Id == id);
+            if (flag)
             {
                 return _users.Single(u => u.Id == id);
             }

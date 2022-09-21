@@ -89,7 +89,8 @@ namespace BLL
         // Возвращаем список товаров по его id категории
         public List<Good> GetGoods(int categorId)
         {
-            return goodsRepo.GetAllGoods().Where(x => x.CategoryId == categorId).ToList();
+            var allGoods = goodsRepo.GetAllGoods();
+            return allGoods.Where(x => x.CategoryId == categorId).ToList();
         }
 
         // Возвращаем список всех товаров
@@ -281,7 +282,9 @@ namespace BLL
         // Добавляем товар и его количество в корзину
         public void AddToCart(int userId, int goodsId, int quantity)
         {
-            if (cartRepo.GetUserCart(userId).Where(x => x.GoodsId == goodsId).ToList().Count < 1)
+            var userCart = cartRepo.GetUserCart(userId);
+
+            if (userCart.Where(x => x.GoodsId == goodsId).ToList().Count < 1)
             {
                 cartRepo.Add(userId, goodsId, quantity);
             }

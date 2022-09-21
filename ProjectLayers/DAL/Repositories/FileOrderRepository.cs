@@ -37,7 +37,8 @@ namespace DAL.Repositories
         {
             if(_orders.Where(x => x.Id == orderId).ToList().Count > 0)
             {
-                _orders.Remove(_orders.Single(x => x.Id == orderId));
+                var order = _orders.Single(x => x.Id == orderId);
+                _orders.Remove(order);
             }
         }
 

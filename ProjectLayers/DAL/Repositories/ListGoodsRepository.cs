@@ -14,7 +14,9 @@ namespace DAL.Repositories
         {
             if (!_goods.Any(u => u.Name == name) && name != null && name != "")
             {
-                _goods.Add(new Good(categoryId, name, description, goodIndex.IncrementGoodIndex(), price, quantity, url));
+                var index = goodIndex.IncrementGoodIndex();
+                Good good = new Good(categoryId, name, description, index, price, quantity, url);
+                _goods.Add(good);
             }
         }
 
@@ -23,7 +25,8 @@ namespace DAL.Repositories
         {
             if (!_goods.Any(u => u.Name == name) && name != null && name != "")
             {
-                _goods.Add(new Good(categoryId, name, description, id, price, quantity, url));
+                Good good = new Good(categoryId, name, description, id, price, quantity, url);
+                _goods.Add(good);
             }
         }
 

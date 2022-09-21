@@ -13,7 +13,8 @@ namespace DAL.Repositories
         {
             if (!_category.Any(u => u.Name == name) && name != null && name != "")
             {
-                _category.Add(new Category(name, categoryIndex.IncrementCategoryIndex()));
+                var index = categoryIndex.IncrementCategoryIndex();
+                _category.Add(new Category(name, index));
             }
         }
 

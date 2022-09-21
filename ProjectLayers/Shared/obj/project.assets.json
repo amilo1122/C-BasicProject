@@ -157,11 +157,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Ilya\\source\\repos\\C#Project\\C-BasicProject\\ProjectLayers\\Shared\\Shared.csproj",
+      "projectUniqueName": "C:\\Users\\Ilya\\source\\repos\\C#Project\\ProjectLayers\\Shared\\Shared.csproj",
       "projectName": "Shared",
-      "projectPath": "C:\\Users\\Ilya\\source\\repos\\C#Project\\C-BasicProject\\ProjectLayers\\Shared\\Shared.csproj",
+      "projectPath": "C:\\Users\\Ilya\\source\\repos\\C#Project\\ProjectLayers\\Shared\\Shared.csproj",
       "packagesPath": "C:\\Users\\Ilya\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Ilya\\source\\repos\\C#Project\\C-BasicProject\\ProjectLayers\\Shared\\obj\\",
+      "outputPath": "C:\\Users\\Ilya\\source\\repos\\C#Project\\ProjectLayers\\Shared\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Ilya\\AppData\\Roaming\\NuGet\\NuGet.Config",
