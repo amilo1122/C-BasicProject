@@ -32,6 +32,29 @@ Dictionary<int, string> _categoryNameDict = new Dictionary<int, string>();
 Dictionary<int, Good> _goodsDict = new Dictionary<int, Good>();
 // Объявляем словарь для хранения id пользователя
 Dictionary<int, int> _userIdDict = new Dictionary<int, int>();
+// Объявляем массив методов для обработки сообщений от пользователей
+List<Method> methods = new List<Method>()
+{
+    new Method(1, MisundestatingAnswer),
+    new Method(2, AddNewCategory),
+    new Method(3, DeleteCategory),
+    new Method(4, CategoryExists),
+    new Method(5, RenameCategory),
+    new Method(6, CheckCategory),
+    new Method(7, GetGoodName),
+    new Method(8, GetGoodDescription),
+    new Method(9, GetGoodPrice),
+    new Method(10, GetGoodQuantity),
+    new Method(11, GetGoodUrl),
+    new Method(12, DeleteGood),
+    new Method(13, SetNewGoodName),
+    new Method(14, SetNewGoodDescription),
+    new Method(15, SetNewGoodPrice),
+    new Method(16, SetNewGoodQuantity),
+    new Method(17, SetNewGoodUrl),
+    new Method(18, RequestNewUserRole)
+};
+
 // Загружаем репозитории
 settings.LoadRepositories();
 
@@ -104,7 +127,6 @@ async Task InlineModeProcessing(ITelegramBotClient botClient, CallbackQuery call
 {
     Console.WriteLine($"Receive message type {callbackQuery.Message.Type}");
 
-    // Переделать на работу с массивом делегатов
     switch (callbackQuery.Data)
     {
         case string s when s.StartsWith("mainMenu"):
@@ -754,66 +776,10 @@ async Task DisplayCatalog(ITelegramBotClient botClient, CallbackQuery callbackQu
 // Обрабатываем запросы типа Message
 async Task OnMessageProcessing(ITelegramBotClient botClient, Message message)
 {
-    switch (State)
+    Method method = methods.FirstOrDefault(x => x.State == State);
+    if (method != null)
     {
-        case 0:
-            await MisundestatingAnswer(botClient, message);
-            await LoadMainMenu(botClient, message);
-            break;
-        case 1:
-            await SetGood(botClient, message);
-            break;
-        case 2:
-            await AddNewCategory(botClient, message);
-            break;
-        case 3:
-            await DeleteCategory(botClient, message);
-            break;
-        case 4:
-            await CategoryExists(botClient, message);
-            break;
-        case 5:
-            await RenameCategory(botClient, message);
-            break;
-        case 6:
-            await CheckCategory(botClient, message);
-            break;
-        case 7:
-            await GetGoodName(botClient, message);
-            break;
-        case 8:
-            await GetGoodDescription(botClient, message);
-            break;
-        case 9:
-            await GetGoodPrice(botClient, message);
-            break;
-        case 10:
-            await GetGoodQuantity(botClient, message);
-            break;
-        case 11:
-            await GetGoodUrl(botClient, message);
-            break;
-        case 12:
-            await DeleteGood(botClient, message);
-            break;
-        case 13:
-            await SetNewGoodName(botClient, message);
-            break;
-        case 14:
-            await SetNewGoodDescription(botClient, message);
-            break;
-        case 15:
-            await SetNewGoodPrice(botClient, message);
-            break;
-        case 16:
-            await SetNewGoodQuantity(botClient, message);
-            break;
-        case 17:
-            await SetNewGoodUrl(botClient, message);
-            break;
-        case 18:
-            await RequestNewUserRole(botClient, message);
-            break;
+        method.DelegateMethod(botClient, message);
     }
 }
 
@@ -1211,10 +1177,12 @@ List<InlineKeyboardButton[]> SetOneColumnMenu(List<InlineKeyboardButton> buttons
     return oneColumnMenu;
 }
 
-// Выводим сообщение о непонятной команде, когда пользователь пишет сообщение и State=0
+// Выводим сообщение о непонятной команде, когда пользователь пишет сообщение и State=0, далее выводим главное меню
 async Task MisundestatingAnswer(ITelegramBotClient botClient, Message message)
 {
     await botClient.SendTextMessageAsync(message.Chat.Id, text: "Я не понимаю такой команды...");
+
+    await LoadMainMenu(botClient, message);
 }
 
 // Обработка ошибок

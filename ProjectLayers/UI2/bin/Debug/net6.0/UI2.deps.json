@@ -65,6 +65,10 @@
         }
       },
       "Shared/1.0.0": {
+        "dependencies": {
+          "Telegram.Bot": "18.0.0",
+          "Telegram.Bot.Extensions.Polling": "1.0.2"
+        },
         "runtime": {
           "Shared.dll": {}
         }

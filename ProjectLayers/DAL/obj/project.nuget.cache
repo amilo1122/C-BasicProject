@@ -1,8 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "+wdMWTRmaZYfH8XpGffR5nyFXd01zwPwJG+c/p1DKohyRy7pQLQ/6wD4+0uCpeZ8bGcCR3WgKheXhoX+Fg39+A==",
+  "dgSpecHash": "W7snUR+H+HfDHfCbKwtqvIxjZU0lZ1p+M+AJ1nTrnRXs5jrRQSdzhqk0NETa5Ufk2O3gXIrQWznmEjxIBN5wQQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Ilya\\source\\repos\\C#Project\\ProjectLayers\\DAL\\DAL.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\Users\\Ilya\\source\\repos\\C#Project\\C-BasicProject\\ProjectLayers\\DAL\\DAL.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Ilya\\.nuget\\packages\\newtonsoft.json\\12.0.2\\newtonsoft.json.12.0.2.nupkg.sha512",
+    "C:\\Users\\Ilya\\.nuget\\packages\\system.threading.channels\\6.0.0\\system.threading.channels.6.0.0.nupkg.sha512",
+    "C:\\Users\\Ilya\\.nuget\\packages\\telegram.bot\\18.0.0\\telegram.bot.18.0.0.nupkg.sha512",
+    "C:\\Users\\Ilya\\.nuget\\packages\\telegram.bot.extensions.polling\\1.0.2\\telegram.bot.extensions.polling.1.0.2.nupkg.sha512"
+  ],
   "logs": []
 }

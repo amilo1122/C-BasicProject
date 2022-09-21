@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "pB0v6uGoFLBu5hh53yaJXsjPQZXB3CyXzuSGim+tCYkoVgzPLF8U0r8Co4O6rxjqVwOo6Bu2qQ7J+P2c9r6QPA==",
+  "dgSpecHash": "LYPf3Zna7Ww9xlPlBQm2VC672EuDFxGvnrLJ5vAnU3HiViDAymQkQbLcj9HHp50t7YlNj4mZeZkHNpFNmbJ+jQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Ilya\\source\\repos\\C#Project\\ProjectLayers\\UI2\\UI2.csproj",
+  "projectFilePath": "C:\\Users\\Ilya\\source\\repos\\C#Project\\C-BasicProject\\ProjectLayers\\UI2\\UI2.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Ilya\\.nuget\\packages\\newtonsoft.json\\12.0.2\\newtonsoft.json.12.0.2.nupkg.sha512",
     "C:\\Users\\Ilya\\.nuget\\packages\\system.threading.channels\\6.0.0\\system.threading.channels.6.0.0.nupkg.sha512",
