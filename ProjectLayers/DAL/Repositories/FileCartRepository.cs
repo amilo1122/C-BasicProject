@@ -42,7 +42,7 @@ namespace DAL.Repositories
 
         public void UpdateQuantity(long userId, int goodsId, int quantity)
         {
-            var currentCart = _cart.Single(x => x.UserId == userId && x.GoodsId == goodsId);
+            var currentCart = _cart.Single(x => x.UserId == userId && x.GoodId == goodsId);
             var currentQuantity = currentCart.Quantity;
             if (quantity == 1)
             {
@@ -63,7 +63,7 @@ namespace DAL.Repositories
 
         public void Remove(long userId, int goodsId)
         {
-            var cart = _cart.Single(x => x.UserId == userId && x.GoodsId == goodsId);
+            var cart = _cart.Single(x => x.UserId == userId && x.GoodId == goodsId);
             _cart.Remove(cart);
         }
     }

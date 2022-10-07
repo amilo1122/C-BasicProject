@@ -1,0 +1,80 @@
+9223372036854775807
+2147483647
+
+INSERT INTO Users (ID, Role)
+VALUES (807108007,1);
+VALUES (632879954,2);
+VALUES (1344157147,3);
+
+INSERT INTO Goods (CategoryId, Name, Description, Price, Quantity, Url)
+VALUES (0,'Tablespoon Kitchenberry','Table spoons made of high quality durable stainless steel with a comfortable handle consist of 6 pieces',359,15,'https://disk.yandex.ru/i/FLFI_kPoH5EVdA');
+VALUES (0,'Tablespoon "stainless steel"','Dessert spoons are perfect for desserts, cocktails, coffee, tea',359,4,'https://disk.yandex.ru/i/X3fIGk0C2bT_iA');
+VALUES (0,'MIRON tea spoon set','A set of 6 teaspoons with a handle is made of high quality stainless steel, which undergoes careful technical control',289,9,'https://disk.yandex.ru/i/q9f1ZFZ8aZSsQA');
+VALUES (1,'Stainless Steel Spork Salad Noodle Spoon Fork Cutlery Tableware Dinner','This is a stainless steel sprok for home and kitchen use, exquisite handwork, and sleek surface with a long handle, more suitable for man or other people who has a big palm or love a little big eating utensil',302,10,'https://disk.yandex.ru/i/iIewWJAazEJJRA');
+VALUES (1,'12 Dining Stainless Steel Forks Silver Cutlery Dining Table','A brand-new, unused, unopened, undamaged item in its original packaging (where packaging is applicable)',190,10,'https://disk.yandex.ru/i/xaGtVhF03lIg0Q');
+VALUES (1,'SSS BY ONEIDA OUR ROSE Stainless 4-Dinner Forks 7','See the sellers listing for full details and description of any imperfections',922,10,'https://disk.yandex.ru/i/1jOHTFCQGAus-g');
+VALUES (2,'SSS by Oneida MAESTRO ST LEGER 6 Dinner Table Knife Vintage Stainless Flatware','Stainless Steel Flatware, Dishwasher Safe, Reusable',553,10,'https://disk.yandex.ru/i/duxnhlU5D_MwYQ');
+VALUES (2,'vintage VINERS International Mosaic 1 x Small Table Knife 21cm 1970s','This listing is for 1 x Viners International vintage Mosaic design small Table Knife, from the 1970s',355,10,'https://disk.yandex.ru/i/WkH9l5jxV5OHKg');
+VALUES (3,'Villeroy Boch Vieux Luxembourg old Luxembourg soup plate 23 cm','Villeroy Boch Vieux Luxembourg',489,10,'https://disk.yandex.ru/i/vkHjA_O8BFQA9w');
+VALUES (3,'Rosenthal Monbijou Bloom Carpet Teacup Cake Plate','The shipping costs mentioned above are only valid for shipments within Germany',1707,10,'https://disk.yandex.ru/i/BlNZsYtxX1UOLQ');
+VALUES (3,'Set of 3 GUCCI Porcellana Greek Mythology Salad Plates 8.25 EUC Vintg Porcelain','The colors, graphics and finish are vibrant, shiny and in excellent condition',7682,10,'https://disk.yandex.ru/i/0TYsvHFLXamZcw');
+
+
+
+--INSERT INTO Categories (Name)
+	--VALUES ('Spoons');
+	--VALUES ('Forks');
+	--VALUES ('Knives');
+	--VALUES ('Plates');
+
+SELECT * FROM Categories
+
+DROP TABLE Categories;
+
+CREATE TABLE OrderItems(
+	ID serial PRIMARY KEY ,
+	OrderId int,
+	GoodId int,
+	Price decimal,
+	Quantity int,
+	CONSTRAINT fk_goods_id_goodid FOREIGN KEY (GoodId) REFERENCES Goods(ID)
+	CONSTRAINT fk_orders_id_orderid FOREIGN KEY (OrderId) REFERENCES Orders(ID)
+);
+
+CREATE TABLE Orders(
+	ID serial PRIMARY KEY ,
+	UserId bigint,
+	TotalSum decimal,
+	CreatedDate date,
+	CONSTRAINT fk_users_id_userid FOREIGN KEY (UserId) REFERENCES Users(ID)
+);
+
+CREATE TABLE Carts(
+	ID serial PRIMARY KEY ,
+	UserId bigint,
+	GoodId int,
+	Quantity int,
+	CONSTRAINT fk_users_id_userid FOREIGN KEY (UserId) REFERENCES Users(ID),
+	CONSTRAINT fk_goods_id_goodid FOREIGN KEY (GoodId) REFERENCES Goods(ID)
+);
+
+CREATE TABLE Users(
+	ID bigserial PRIMARY KEY ,
+	Role int
+);
+
+CREATE TABLE Goods(
+	ID serial PRIMARY KEY ,
+	Name varchar(255),
+	Description varchar(255),
+	CategoryId int,
+	Price decimal,
+	Quantity int,
+	Url varchar(255),
+	CONSTRAINT fk_categories_id_categoryid FOREIGN KEY (CategoryId) REFERENCES Categories(ID)
+);
+
+CREATE TABLE Categories(
+	ID serial PRIMARY KEY ,
+	Name varchar(255)
+);

@@ -274,7 +274,7 @@ namespace BLL
             {
                 CartIni.Write("Id", item.Id.ToString(), item.Id.ToString());
                 CartIni.Write("UserId", item.UserId.ToString(), item.Id.ToString());
-                CartIni.Write("GoodsId", item.GoodsId.ToString(), item.Id.ToString());
+                CartIni.Write("GoodsId", item.GoodId.ToString(), item.Id.ToString());
                 CartIni.Write("Quantity", item.Quantity.ToString(), item.Id.ToString());
             }
         }
@@ -284,7 +284,7 @@ namespace BLL
         {
             var userCart = cartRepo.GetUserCart(userId);
 
-            if (userCart.Where(x => x.GoodsId == goodsId).ToList().Count < 1)
+            if (userCart.Where(x => x.GoodId == goodsId).ToList().Count < 1)
             {
                 cartRepo.Add(userId, goodsId, quantity);
             }
@@ -303,7 +303,7 @@ namespace BLL
             Good good;
             foreach (var item in userCart)
             {
-                good = goodsRepo.GetGood(item.GoodsId);
+                good = goodsRepo.GetGood(item.GoodId);
                 GoodsView cw = new GoodsView();
                 cw.GoodId = good.Id;
                 cw.GoodName = good.Name;
@@ -327,8 +327,8 @@ namespace BLL
             var userCart = cartRepo.GetUserCart(userId);
             foreach (var item in userCart)
             {
-                DeleteGoodCartIni(userId, item.GoodsId);
-                cartRepo.Remove(userId, item.GoodsId);
+                DeleteGoodCartIni(userId, item.GoodId);
+                cartRepo.Remove(userId, item.GoodId);
             }
         }
 
@@ -339,17 +339,17 @@ namespace BLL
             decimal totalSum = 0;
             foreach (var item in userCart)
             {
-                var currentGood = goodsRepo.GetGood(item.GoodsId);
+                var currentGood = goodsRepo.GetGood(item.GoodId);
                 if (item.Quantity <= currentGood.Quantity)
                 {
                     var newQuantity = currentGood.Quantity - item.Quantity;
-                    goodsRepo.ChangeQuantity(item.GoodsId, newQuantity);
+                    goodsRepo.ChangeQuantity(item.GoodId, newQuantity);
                     totalSum = totalSum + currentGood.Price * item.Quantity;
                 }
                 else
                 {
                     totalSum = totalSum + currentGood.Price * currentGood.Quantity;
-                    goodsRepo.ChangeQuantity(item.GoodsId, 0);
+                    goodsRepo.ChangeQuantity(item.GoodId, 0);
                 }
             }
             return totalSum;
@@ -362,7 +362,7 @@ namespace BLL
             var userCart = cartRepo.GetUserCart(userId);
             foreach (var item in userCart)
             {
-                if (item.GoodsId == goodId)
+                if (item.GoodId == goodId)
                 {
                     CartIni.DeleteSection(item.Id.ToString());
                 }
@@ -569,7 +569,7 @@ namespace BLL
             var orderItems = cartRepo.GetUserCart(userId).ToList();
             foreach (var item in orderItems)
             {
-                orderRepo.AddOrderItems(orderId, item.GoodsId, goodsRepo.GetGood(item.GoodsId).Price, item.Quantity);
+                orderRepo.AddOrderItems(orderId, item.GoodId, goodsRepo.GetGood(item.GoodId).Price, item.Quantity);
             }
             SaveOrder();
             SaveGoods();
