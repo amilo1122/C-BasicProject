@@ -48,11 +48,12 @@ namespace DAL.Repositories
         }
 
         // Задаем новое имя категории
-        public void Rename(string oldName, string newName)
+        public bool Rename(string oldName, string newName)
         {
             var category = _category.Single(x => x.Name == oldName);
             var index = _category.IndexOf(category);
             _category[index].Name = newName;
+            return true;
         }
 
         // Прооверяем существование категории
@@ -75,9 +76,5 @@ namespace DAL.Repositories
             return category.Id;
         }
 
-        public List<Category> GetCategoryList()
-        {
-            return _category;
-        }
     }
 }

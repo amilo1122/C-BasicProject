@@ -1,10 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "eKciXha+dl0YFUzBuMkWIuQ72H4fq5Rn9DIdVWGSoCFYbZTw4H5/MIViA/u3NBvZk7MZ0h2fu5mFKOUOpJoLDQ==",
+  "dgSpecHash": "DHoqSweiR1eAIAUbTrncqLdZspZ8QlTAo7dRuUEEXudkoyf5CA64+OsWDSFu/FXUv/HKHOueGZ1R99GrpNe+Xg==",
   "success": true,
   "projectFilePath": "C:\\Users\\Ilya\\source\\repos\\C#Project\\ProjectLayers\\BLL\\BLL.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Ilya\\.nuget\\packages\\dapper\\2.0.123\\dapper.2.0.123.nupkg.sha512",
     "C:\\Users\\Ilya\\.nuget\\packages\\newtonsoft.json\\12.0.2\\newtonsoft.json.12.0.2.nupkg.sha512",
+    "C:\\Users\\Ilya\\.nuget\\packages\\npgsql\\6.0.7\\npgsql.6.0.7.nupkg.sha512",
+    "C:\\Users\\Ilya\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512",
     "C:\\Users\\Ilya\\.nuget\\packages\\system.threading.channels\\6.0.0\\system.threading.channels.6.0.0.nupkg.sha512",
     "C:\\Users\\Ilya\\.nuget\\packages\\telegram.bot\\18.0.0\\telegram.bot.18.0.0.nupkg.sha512",
     "C:\\Users\\Ilya\\.nuget\\packages\\telegram.bot.extensions.polling\\1.0.2\\telegram.bot.extensions.polling.1.0.2.nupkg.sha512"

@@ -13,9 +13,12 @@ namespace BLL
         IUserRepository usersRepo = new ListUserRepository();
         ICartRepository cartRepo = new FileCartRepository();
         IOrderRepository orderRepo = new FileOrderRepository();
+        ICategoryRepository categoryRepository = new DapperCategoryRepository();
 
-        IniFile CategoryIni, GoodsIni, CartIni, OrdersIni, OrderItemsIni, UsersIni;
         
+                
+        IniFile CategoryIni, GoodsIni, CartIni, OrdersIni, OrderItemsIni, UsersIni;
+
         string categoryFileName = "Categories.ini";
         string goodsFileName = "Goods.ini";
         string cartFileName = "Cart.ini";
@@ -246,7 +249,7 @@ namespace BLL
                 File.Delete(goodsFileName);
             }
 
-            foreach (var item in categoryRepo.GetCategoryList())
+            foreach (var item in categoryRepo.Browse())
             {
                 CategoryIni.Write("Name", item.Name, item.Id.ToString());
                 CategoryIni.Write("Id", item.Id.ToString(), item.Id.ToString());
