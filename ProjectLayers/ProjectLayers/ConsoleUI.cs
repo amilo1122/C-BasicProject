@@ -7,21 +7,14 @@ namespace UI1
 {
     public class ConsoleUI
     {
-        //private static MainMenu _menus;
-
-        //public Program()
-        //{
-        //    _menus = new MainMenu();
-        //}
-
         static void Main(string[] args)
         {
             Settings settings = new Settings();
                         
             Console.Write("Приветствую! Введите свой id: ");
-            int userId = Int32.Parse(Console.ReadLine());
+            long userId = Int64.Parse(Console.ReadLine());
 
-            List<Menu> mainMenu = JsonSerializer.Deserialize<List<Menu>>(settings.LoadMenu(userId));
+            List<Menu> mainMenu = JsonSerializer.Deserialize<List<Menu>>(settings.LoadMainMenu(userId));
 
             if (mainMenu != null)
             {
