@@ -8,21 +8,5 @@
         public decimal Price { set; get; }
         public int Quantity { set; get; }
         public string Url { set; get; }
-
-        public Good()
-        {
-
-        }
-
-        public Good(int categoryId, string name, string description, int id, decimal price, int quantity, string url)
-        {
-            CategoryId = categoryId;
-            Name = name;
-            Description = description;
-            Id = id;
-            Price = price;
-            Quantity = quantity;
-            Url = url;
-        }
     }
 }
