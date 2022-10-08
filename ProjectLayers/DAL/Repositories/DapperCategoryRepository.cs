@@ -8,22 +8,20 @@ namespace DAL.Repositories
     public class DapperCategoryRepository : ICategoryRepository
     {
         string connectionString = Config.SQLConnectionString;
-        public void Add(string name)
+        public bool Add(string name)
         {
             using (var connection = new NpgsqlConnection(connectionString))
             {
-                string sql = @"SELECT id FROM categories
-                            WHERE name LIKE '%" + name + "%'";
-                var result = connection.QueryFirstOrDefault<Category>(sql);
-                if (result != null)
+                try
                 {
-                    return;
-                }
-                else
-                {
-                    sql = @"INSERT INTO Categories (Name) 
+                    var sql = @"INSERT INTO Categories (Name) 
                                 VALUES ('" + name + "');";
-                    result = connection.QueryFirstOrDefault<Category>(sql);
+                    var result = connection.QueryFirstOrDefault<Category>(sql);
+                    return true;
+                }
+                catch
+                {
+                    return false;
                 }
             }
         }
@@ -95,7 +93,30 @@ namespace DAL.Repositories
 
         public bool Rename(string oldName, string newName)
         {
-            throw new NotImplementedException();
+            using (var connection = new NpgsqlConnection(Config.SQLConnectionString))
+            {
+                string sql = @"SELECT id FROM categories
+                            WHERE name LIKE '%" + oldName + "%'";
+                var result = connection.QueryFirstOrDefault<Category>(sql);
+                if (result != null)
+                {
+                    try
+                    {
+                        sql = @"UPDATE categories
+                            SET name = '" + newName + "' WHERE id = " + result.Id;
+                        result = connection.QueryFirstOrDefault<Category>(sql);
+                        return true;
+                    }
+                    catch
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
         }
     }
 }

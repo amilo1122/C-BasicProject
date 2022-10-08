@@ -3,7 +3,7 @@
 namespace Shared.Interfaces
 {    public interface ICategoryRepository
     {
-        void Add(string name);
+        bool Add(string name);
         bool Delete(string name);
         bool Rename(string oldName, string newName);
         bool isExists(string name);
