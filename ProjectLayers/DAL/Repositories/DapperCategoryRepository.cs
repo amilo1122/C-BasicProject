@@ -7,7 +7,10 @@ namespace DAL.Repositories
 {
     public class DapperCategoryRepository : ICategoryRepository
     {
+        // Создаем строку подключения к БД
         string connectionString = Config.SQLConnectionString;
+
+        // Добаление новой категории, false в случае неуникальности наименования категории
         public bool Add(string name)
         {
             using (var connection = new NpgsqlConnection(connectionString))
@@ -26,6 +29,7 @@ namespace DAL.Repositories
             }
         }
 
+        // Выыодим список всех категорий
         public List<Category> Browse()
         {
             using (var connection = new NpgsqlConnection(connectionString))
@@ -37,6 +41,7 @@ namespace DAL.Repositories
             }
         }
 
+        // Удаляем категорию по наименованию, flase в случае отстсвия значения к БД
         public bool Delete(string name)
         {
             using (var connection = new NpgsqlConnection(connectionString))
@@ -58,6 +63,7 @@ namespace DAL.Repositories
             }
         }
 
+        // Возвращаем id категории по наименованию
         public int GetCategoryId(string name)
         {
             using (var connection = new NpgsqlConnection(connectionString))
@@ -73,6 +79,7 @@ namespace DAL.Repositories
             }
         }
 
+        // Проверка существования категории по наименованию
         public bool isExists(string name)
         {
             using (var connection = new NpgsqlConnection(connectionString))
@@ -91,6 +98,7 @@ namespace DAL.Repositories
             }
         }
 
+        // Переименование категории, flase, если категория отстствуем или новое наименование не уникально
         public bool Rename(string oldName, string newName)
         {
             using (var connection = new NpgsqlConnection(Config.SQLConnectionString))
