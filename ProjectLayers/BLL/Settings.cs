@@ -13,7 +13,7 @@ namespace BLL
         IUserRepository usersRepo = new ListUserRepository();
         ICartRepository cartRepo = new FileCartRepository();
         IOrderRepository orderRepo = new FileOrderRepository();
-        ICategoryRepository categoryRepository = new DapperCategoryRepository();
+        ICategoryRepository categoryRepository = new DapperCategoriesRepository();
 
         
                 
