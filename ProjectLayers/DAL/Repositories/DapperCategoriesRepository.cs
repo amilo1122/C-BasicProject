@@ -101,7 +101,7 @@ namespace DAL.Repositories
         // Переименование категории, flase, если категория отстствуем или новое наименование не уникально
         public bool Rename(string oldName, string newName)
         {
-            using (var connection = new NpgsqlConnection(Config.SQLConnectionString))
+            using (var connection = new NpgsqlConnection(connectionString))
             {
                 string sql = @"SELECT id FROM categories
                             WHERE name LIKE '" + oldName + "'";

@@ -13,7 +13,7 @@ namespace DAL.Repositories
         // Добавляем новый товар, false в случае неуникальности наименования товара
         public bool Add(int categoryId, string name, string description, decimal price, int quantity, string url)
         {
-            using (var connection = new NpgsqlConnection(Config.SQLConnectionString))
+            using (var connection = new NpgsqlConnection(connectionString))
             {
                 try
                 {
@@ -32,7 +32,8 @@ namespace DAL.Repositories
         // Меняем id категории товара по id, false, если id не найден 
         public bool ChangeCategoryId(int id, int categoryId)
         {
-            using (var connection = new NpgsqlConnection(Config.SQLConnectionString))
+            using (var connection = new NpgsqlConnection(connectionString))
+            {
                 try
                 {
                     var sql = @"UPDATE goods
@@ -44,12 +45,15 @@ namespace DAL.Repositories
                 {
                     return false;
                 }
+            }
+                
         }
 
         // Меняем описание товара по id, false, если id не найден
         public bool ChangeDescription(int id, string description)
         {
-            using (var connection = new NpgsqlConnection(Config.SQLConnectionString))
+            using (var connection = new NpgsqlConnection(connectionString))
+            {
                 try
                 {
                     var sql = @"UPDATE goods
@@ -61,12 +65,15 @@ namespace DAL.Repositories
                 {
                     return false;
                 }
+            }
+                
         }
 
         // Меняем url товара по id, false, если id не найден
         public bool ChangeGoodUrl(int id, string url)
         {
-            using (var connection = new NpgsqlConnection(Config.SQLConnectionString))
+            using (var connection = new NpgsqlConnection(connectionString))
+            {
                 try
                 {
                     var sql = @"UPDATE goods
@@ -78,12 +85,15 @@ namespace DAL.Repositories
                 {
                     return false;
                 }
+            }
+                
         }
 
         //Меняем наименование товара по id, false, если id не найден
         public bool ChangeName(int id, string name)
         {
-            using (var connection = new NpgsqlConnection(Config.SQLConnectionString))
+            using (var connection = new NpgsqlConnection(connectionString))
+            {
                 try
                 {
                     var sql = @"UPDATE goods
@@ -95,12 +105,15 @@ namespace DAL.Repositories
                 {
                     return false;
                 }
+            }
+                
         }
 
         //Меняем стоимость товара по id, false, если id не найден
         public bool ChangePrice(int id, decimal price)
         {
-            using (var connection = new NpgsqlConnection(Config.SQLConnectionString))
+            using (var connection = new NpgsqlConnection(connectionString))
+            {
                 try
                 {
                     var sql = @"UPDATE goods
@@ -112,12 +125,15 @@ namespace DAL.Repositories
                 {
                     return false;
                 }
+            }
+                
         }
 
         // Меняем доступное количество товара по id, false, если id не найден
         public bool ChangeQuantity(int id, int quantity)
         {
-            using (var connection = new NpgsqlConnection(Config.SQLConnectionString))
+            using (var connection = new NpgsqlConnection(connectionString))
+            {
                 try
                 {
                     var sql = @"UPDATE goods
@@ -129,12 +145,15 @@ namespace DAL.Repositories
                 {
                     return false;
                 }
+            }
+                
         }
 
         // Удаляем товар по id, false, если id не найден
         public bool Delete(string name)
         {
-            using (var connection = new NpgsqlConnection(Config.SQLConnectionString))
+            using (var connection = new NpgsqlConnection(connectionString))
+            {
                 try
                 {
                     var sql = @"DELETE FROM goods WHERE name LIKE '" + name + "'";
@@ -145,12 +164,14 @@ namespace DAL.Repositories
                 {
                     return false;
                 }
+            }
+                
         }
 
         // Выводим список всех товаров
         public List<Good> GetAllGoods()
         {
-            using (var connection = new NpgsqlConnection(Config.SQLConnectionString))
+            using (var connection = new NpgsqlConnection(connectionString))
             {
                 string sql = @"SELECT id, name, description, categoryId, price, quantity, url 
                             FROM goods";
@@ -162,7 +183,7 @@ namespace DAL.Repositories
         // Выводим товар по id
         public Good GetGood(int id)
         {
-            using (var connection = new NpgsqlConnection(Config.SQLConnectionString))
+            using (var connection = new NpgsqlConnection(connectionString))
             {
                 string sql = @"SELECT id, name, description, categoryId, price, quantity, url 
                             FROM goods
