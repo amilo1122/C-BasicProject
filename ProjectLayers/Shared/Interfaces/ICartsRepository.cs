@@ -7,7 +7,7 @@ namespace Shared.Interfaces
     {
         bool Add(long userId, int goodId, int quantity);
         bool Delete(long userId, int goodId);
-        bool UpdateQuantity(long userId, int goodId, int quantity);
+        bool AddQuantity(long userId, int goodId, int quantity);
         List<Cart> GetUserCart(long userId);
     }
 }

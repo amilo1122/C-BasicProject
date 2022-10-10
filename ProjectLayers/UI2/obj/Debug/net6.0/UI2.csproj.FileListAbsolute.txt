@@ -73,3 +73,5 @@ C:\Users\Ilya\source\repos\C#Project\C-BasicProject\ProjectLayers\UI2\obj\Debug\
 C:\Users\Ilya\source\repos\C#Project\C-BasicProject\ProjectLayers\UI2\obj\Debug\net6.0\UI2.pdb
 C:\Users\Ilya\source\repos\C#Project\C-BasicProject\ProjectLayers\UI2\obj\Debug\net6.0\UI2.genruntimeconfig.cache
 C:\Users\Ilya\source\repos\C#Project\C-BasicProject\ProjectLayers\UI2\obj\Debug\net6.0\ref\UI2.dll
+C:\Users\Ilya\source\repos\C#Project\ProjectLayers\UI2\bin\Debug\net6.0\Dapper.dll
+C:\Users\Ilya\source\repos\C#Project\ProjectLayers\UI2\bin\Debug\net6.0\Npgsql.dll

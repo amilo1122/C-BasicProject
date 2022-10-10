@@ -7,7 +7,7 @@ namespace Shared.Interfaces
         bool Delete(string name);
         bool Rename(string oldName, string newName);
         bool isExists(string name);
-        List<Category> Browse();
+        List<Category> GetAllCategories();
         int GetCategoryId(string name);
     }
 }

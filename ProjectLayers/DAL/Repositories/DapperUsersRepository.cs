@@ -36,7 +36,7 @@ namespace DAL.Repositories
                 try
                 {
                     var sql = @"UPDATE users
-                            SET role = '" + role + "' WHERE id = " + id;
+                                SET role = '" + role + "' WHERE id = " + id;
                     var result = connection.QueryFirstOrDefault<User>(sql);
                     return true;
                 }
@@ -95,7 +95,7 @@ namespace DAL.Repositories
             using (var connection = new NpgsqlConnection(connectionString))
             {
                 string sql = @"SELECT id, role 
-                            FROM users";
+                                FROM users";
                 var result = connection.Query<User>(sql);
                 return result.ToList();
             }

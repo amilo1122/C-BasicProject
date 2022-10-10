@@ -8,5 +8,6 @@ namespace Shared.Interfaces
         void AddOrderItems(int orderId, int goodId, decimal price, int quantity);
         List<Order> GetUserOrders(long userId);
         List<OrderItems> GetOrderItems(int orderId);
+        Order GetOrder(int id);
     }
 }

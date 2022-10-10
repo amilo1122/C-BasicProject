@@ -55,8 +55,6 @@ List<Method> methods = new List<Method>()
     new Method(18, RequestNewUserRole)
 };
 
-// Загружаем репозитории
-settings.LoadRepositories();
 
 // Объявляем настройки получения обновлений
 var receiverOptions = new ReceiverOptions
@@ -623,7 +621,7 @@ async Task Checkout(ITelegramBotClient botClient, CallbackQuery callbackQuery)
 async Task ReduceQuantity(ITelegramBotClient botClient, CallbackQuery callbackQuery)
 {
     var id = callbackQuery.Message.Chat.Id;
-    settings.ChangeQuantity(id, _goodIdDict[id], -1);
+    settings.ChangeCartGoodQuantity(id, _goodIdDict[id], -1);
     await DisplayCart(botClient, callbackQuery);
 }
 
@@ -631,7 +629,7 @@ async Task ReduceQuantity(ITelegramBotClient botClient, CallbackQuery callbackQu
 async Task IncreaseQuantity(ITelegramBotClient botClient, CallbackQuery callbackQuery)
 {
     var id = callbackQuery.Message.Chat.Id;
-    settings.ChangeQuantity(id, _goodIdDict[id], 1);
+    settings.ChangeCartGoodQuantity(id, _goodIdDict[id], 1);
     await DisplayCart(botClient, callbackQuery);
 }
 
@@ -688,7 +686,7 @@ async Task DisplayCart(ITelegramBotClient botClient, CallbackQuery callbackQuery
     {
         await botClient.SendTextMessageAsync(
         chatId: callbackQuery.Message.Chat.Id,
-        text: $"--{cart.GoodId}-- <b>{cart.GoodName}</b> - {cart.Quantity} шт. - {cart.GoodPrice} руб.",
+        text: $"--{cart.GoodId}-- <b>{cart.GoodName}</b> - {cart.GoodPrice} руб. - {cart.Quantity} шт. - <b>{cart.GoodPrice * cart.Quantity} руб.</b>",
         parseMode: ParseMode.Html,
         disableNotification: true);
         totalPrice += cart.GoodPrice * cart.Quantity;
@@ -837,7 +835,7 @@ async Task SetNewGoodQuantity(ITelegramBotClient botClient, Message message)
     if (Int32.TryParse(message.Text, out int quantity))
     {
         var id = message.Chat.Id;
-        settings.ChangeQuantity(_goodIdDict[id], quantity);
+        settings.ChangeGoodQuantity(_goodIdDict[id], quantity);
         await botClient.SendTextMessageAsync(message.Chat.Id, "Количество доступного товара изменено");
 
         await LoadMainMenu(botClient, message);

@@ -37,7 +37,7 @@ namespace DAL.Repositories
                 try
                 {
                     var sql = @"UPDATE goods
-                            SET categoryId = '" + categoryId + "' WHERE id = " + id;
+                                SET categoryId = '" + categoryId + "' WHERE id = " + id;
                     var result = connection.QueryFirstOrDefault<Category>(sql);
                     return true;
                 }
@@ -57,7 +57,7 @@ namespace DAL.Repositories
                 try
                 {
                     var sql = @"UPDATE goods
-                            SET description = '" + description + "' WHERE id = " + id;
+                                SET description = '" + description + "' WHERE id = " + id;
                     var result = connection.QueryFirstOrDefault<Category>(sql);
                     return true;
                 }
@@ -77,7 +77,7 @@ namespace DAL.Repositories
                 try
                 {
                     var sql = @"UPDATE goods
-                            SET url = '" + url + "' WHERE id = " + id;
+                                SET url = '" + url + "' WHERE id = " + id;
                     var result = connection.QueryFirstOrDefault<Category>(sql);
                     return true;
                 }
@@ -97,7 +97,7 @@ namespace DAL.Repositories
                 try
                 {
                     var sql = @"UPDATE goods
-                            SET name = '" + name + "' WHERE id = " + id;
+                                SET name = '" + name + "' WHERE id = " + id;
                     var result = connection.QueryFirstOrDefault<Category>(sql);
                     return true;
                 }
@@ -117,7 +117,7 @@ namespace DAL.Repositories
                 try
                 {
                     var sql = @"UPDATE goods
-                            SET price = " + price + " WHERE id = " + id;
+                                SET price = " + price + " WHERE id = " + id;
                     var result = connection.QueryFirstOrDefault<Category>(sql);
                     return true;
                 }
@@ -134,17 +134,25 @@ namespace DAL.Repositories
         {
             using (var connection = new NpgsqlConnection(connectionString))
             {
-                try
+                if (quantity >= 0)
                 {
-                    var sql = @"UPDATE goods
-                            SET quantity = " + quantity + " WHERE id = " + id;
-                    var result = connection.QueryFirstOrDefault<Category>(sql);
-                    return true;
+                    try
+                    {
+                        var sql = @"UPDATE goods
+                                    SET quantity = " + quantity + " WHERE id = " + id;
+                        var result = connection.QueryFirstOrDefault<Category>(sql);
+                        return true;
+                    }
+                    catch
+                    {
+                        return false;
+                    }
                 }
-                catch
+                else
                 {
                     return false;
                 }
+                
             }
                 
         }
@@ -164,8 +172,7 @@ namespace DAL.Repositories
                 {
                     return false;
                 }
-            }
-                
+            }                
         }
 
         // Выводим список всех товаров
@@ -174,7 +181,20 @@ namespace DAL.Repositories
             using (var connection = new NpgsqlConnection(connectionString))
             {
                 string sql = @"SELECT id, name, description, categoryId, price, quantity, url 
-                            FROM goods";
+                                FROM goods";
+                var result = connection.Query<Good>(sql);
+                return result.ToList();
+            }
+        }
+
+        // Выводим список товаров категории по ее id
+        public List<Good> GetAllGoods(int categoryId)
+        {
+            using (var connection = new NpgsqlConnection(connectionString))
+            {
+                string sql = @"SELECT id, name, description, categoryId, price, quantity, url 
+                                FROM goods
+                                WHERE categoryid = " + categoryId;
                 var result = connection.Query<Good>(sql);
                 return result.ToList();
             }
@@ -186,8 +206,8 @@ namespace DAL.Repositories
             using (var connection = new NpgsqlConnection(connectionString))
             {
                 string sql = @"SELECT id, name, description, categoryId, price, quantity, url 
-                            FROM goods
-                            WHERE id = " + id;
+                                FROM goods
+                                WHERE id = " + id;
                 return connection.QueryFirstOrDefault<Good>(sql);
             }
         }

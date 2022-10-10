@@ -30,14 +30,21 @@ namespace DAL.Repositories
         }
 
         // Выводим список всех категорий
-        public List<Category> Browse()
+        public List<Category>? GetAllCategories()
         {
             using (var connection = new NpgsqlConnection(connectionString))
             {
                 string sql = @"SELECT id, name 
                                 FROM categories";
                 var result = connection.Query<Category>(sql);
-                return result.ToList();
+                if (result != null)
+                {
+                    return result.ToList();
+                }
+                else
+                {
+                    return null;
+                }                
             }
         }
 
@@ -47,7 +54,7 @@ namespace DAL.Repositories
             using (var connection = new NpgsqlConnection(connectionString))
             {
                 string sql = @"SELECT id FROM categories
-                            WHERE name LIKE '" + name + "'";
+                                WHERE name LIKE '" + name + "'";
                 var result = connection.Query<Category>(sql);
 
                 if (result == null)
@@ -69,7 +76,7 @@ namespace DAL.Repositories
             using (var connection = new NpgsqlConnection(connectionString))
             {
                 string sql = @"SELECT id FROM categories
-                            WHERE name LIKE '" + name + "'";
+                                WHERE name LIKE '" + name + "'";
                 var result = connection.QueryFirstOrDefault<Category>(sql);
                 if (result != null)
                 {
@@ -85,7 +92,7 @@ namespace DAL.Repositories
             using (var connection = new NpgsqlConnection(connectionString))
             {
                 string sql = @"SELECT id FROM categories
-                            WHERE name LIKE '" + name + "'";
+                                WHERE name LIKE '" + name + "'";
                 var result = connection.QueryFirstOrDefault<Category>(sql);
                 if (result != null)
                 {
@@ -104,14 +111,14 @@ namespace DAL.Repositories
             using (var connection = new NpgsqlConnection(connectionString))
             {
                 string sql = @"SELECT id FROM categories
-                            WHERE name LIKE '" + oldName + "'";
+                                WHERE name LIKE '" + oldName + "'";
                 var result = connection.QueryFirstOrDefault<Category>(sql);
                 if (result != null)
                 {
                     try
                     {
                         sql = @"UPDATE categories
-                            SET name = '" + newName + "' WHERE id = " + result.Id;
+                                SET name = '" + newName + "' WHERE id = " + result.Id;
                         result = connection.QueryFirstOrDefault<Category>(sql);
                         return true;
                     }

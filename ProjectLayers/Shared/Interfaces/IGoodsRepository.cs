@@ -7,6 +7,7 @@ namespace Shared.Interfaces
         public bool Add(int categoryId, string name, string description, decimal price, int quantity, string url);
         public bool Delete(string name);
         public List<Good> GetAllGoods();
+        public List<Good> GetAllGoods(int categoryId);
         public Good GetGood(int id);
         bool ChangeQuantity(int id, int quantity);
         bool ChangeCategoryId(int id, int categoryId);
