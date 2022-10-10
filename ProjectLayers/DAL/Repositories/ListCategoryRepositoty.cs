@@ -4,7 +4,7 @@ using Shared.Models;
 
 namespace DAL.Repositories
 {
-    public class ListCategoryRepositoty : ICategoryRepository
+    public class ListCategoryRepositoty : ICategoriesRepository
     {
         private static List<Category> _category = new List<Category>();
         BaseRepository categoryIndex = new BaseRepository();

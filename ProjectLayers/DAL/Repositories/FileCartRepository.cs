@@ -5,7 +5,7 @@ using DAL.Generators;
 
 namespace DAL.Repositories
 {
-    public class FileCartRepository : ICartRepository
+    public class FileCartRepository : ICartsRepository
     {
         private List<Cart> _cart = new List<Cart>();
         BaseRepository cartIndex = new BaseRepository();

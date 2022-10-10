@@ -8,12 +8,12 @@ namespace BLL
 {
     public class Settings
     {
-        ICategoryRepository categoryRepo = new ListCategoryRepositoty();
+        ICategoriesRepository categoryRepo = new ListCategoryRepositoty();
         IGoodsRepository goodsRepo = new ListGoodsRepository();
-        IUserRepository usersRepo = new ListUserRepository();
-        ICartRepository cartRepo = new FileCartRepository();
-        IOrderRepository orderRepo = new FileOrderRepository();
-        ICategoryRepository categoryRepository = new DapperCategoriesRepository();
+        IUsersRepository usersRepo = new ListUserRepository();
+        ICartsRepository cartRepo = new FileCartRepository();
+        IOrdersRepository orderRepo = new FileOrderRepository();
+        ICategoriesRepository categoryRepository = new DapperCategoriesRepository();
 
         
                 
@@ -273,7 +273,7 @@ namespace BLL
         {
             CartIni = new IniFile(cartFileName);
 
-            foreach (var item in cartRepo.GetAllCart())
+            foreach (var item in cartRepo.GetAllCarts())
             {
                 CartIni.Write("Id", item.Id.ToString(), item.Id.ToString());
                 CartIni.Write("UserId", item.UserId.ToString(), item.Id.ToString());

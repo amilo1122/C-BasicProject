@@ -4,7 +4,7 @@ using Shared.Models;
 
 namespace DAL.Repositories
 {
-    public class FileOrderRepository : IOrderRepository
+    public class FileOrderRepository : IOrdersRepository
     {
         private List<Order> _orders = new List<Order>();
         private List<OrderItems> _orderItems = new List<OrderItems>();

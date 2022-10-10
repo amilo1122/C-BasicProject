@@ -5,7 +5,7 @@ using Shared.Models;
 
 namespace DAL.Repositories
 {
-    public class DapperUsersRepository : IUserRepository
+    public class DapperUsersRepository : IUsersRepository
     {
         // Создаем строку подключения к БД
         string connectionString = Config.SQLConnectionString;

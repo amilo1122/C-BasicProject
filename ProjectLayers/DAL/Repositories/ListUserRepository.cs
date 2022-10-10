@@ -3,7 +3,7 @@ using Shared.Models;
 
 namespace DAL.Repositories
 {
-    public class ListUserRepository : IUserRepository
+    public class ListUserRepository : IUsersRepository
     {
         private static List<User> _users = new List<User>();
 
