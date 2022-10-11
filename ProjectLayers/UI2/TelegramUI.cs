@@ -52,7 +52,8 @@ List<Method> methods = new List<Method>()
     new Method(15, SetNewGoodPrice),
     new Method(16, SetNewGoodQuantity),
     new Method(17, SetNewGoodUrl),
-    new Method(18, RequestNewUserRole)
+    new Method(18, RequestNewUserRole),
+    new Method(19, SetGood)    
 };
 
 
@@ -668,7 +669,7 @@ async Task DisplayChangeQuantityButtons(ITelegramBotClient botClient, CallbackQu
 async Task ChangeCart(ITelegramBotClient botClient, CallbackQuery callbackQuery)
 {
     await botClient.SendTextMessageAsync(callbackQuery.Message.Chat.Id, "Введите ID товара:");
-    State = 1;
+    State = 19;
 }
 
 // Выводим корзину текущиего пользователя

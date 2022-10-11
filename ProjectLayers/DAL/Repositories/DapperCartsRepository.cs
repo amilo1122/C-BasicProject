@@ -76,6 +76,26 @@ namespace DAL.Repositories
             }
         }
 
+        // Возвращаем корзину пользователя для модели GoodView
+        public List<GoodView> GetUserCartGoodView(long userId)
+        {
+            using (var connection = new NpgsqlConnection(connectionString))
+            {
+                try
+                {
+                    var sql = @"SELECT * 
+                                FROM goodview 
+                                WHERE userid = " + userId;
+                    var result = connection.Query<GoodView>(sql);
+                    return result.ToList();
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+        }
+
         // Обновляем количество товара в корзине. Если сумма текущего и нового количества > 0, обновляем количество, = 0 - удаляем товар из корзины, < 0 - возвращем false
         public bool AddQuantity(long userId, int goodId, int quantity)
         {

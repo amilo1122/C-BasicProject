@@ -165,8 +165,7 @@ namespace BLL
                 else
                 {
                     return false;
-                }
-                
+                }                
             }
             else
             {
@@ -177,20 +176,7 @@ namespace BLL
         // Возвращаем список товаров корзины
         public List<GoodView> GetCart(long userId)
         {
-            List<GoodView> cartView = new List<GoodView>();
-            var userCart = cartRepo.GetUserCart(userId);
-            Good good;
-            foreach (var item in userCart)
-            {
-                good = goodsRepo.GetGood(item.GoodId);
-                GoodView cw = new GoodView();
-                cw.GoodId = good.Id;
-                cw.GoodName = good.Name;
-                cw.GoodPrice = good.Price;
-                cw.Quantity = item.Quantity;
-                cartView.Add(cw);
-            }
-            return cartView;
+            return cartRepo.GetUserCartGoodView(userId);
         }
 
         // Удаляем товар по id из корзины пользователя
@@ -213,11 +199,10 @@ namespace BLL
         }
 
         // Уменьшаем доступное количество товара и обновляем корзину текущего пользователя
-        private decimal ReserveGoods(long userId)
+        private decimal ReserveGoods(List<Cart> orderItems)
         {
-            var userCart = cartRepo.GetUserCart(userId);
             decimal totalSum = 0;
-            foreach (var item in userCart)
+            foreach (var item in orderItems)
             {
                 var currentGood = goodsRepo.GetGood(item.GoodId);
                 if (item.Quantity <= currentGood.Quantity)
@@ -228,8 +213,9 @@ namespace BLL
                 }
                 else
                 {
-                    totalSum = totalSum + currentGood.Price * currentGood.Quantity;
                     goodsRepo.ChangeQuantity(item.GoodId, 0);
+                    totalSum = totalSum + currentGood.Price * currentGood.Quantity;
+                    item.Quantity = 0;
                 }
             }
             return totalSum;
@@ -329,13 +315,14 @@ namespace BLL
         // Сформировать заказ
         public Order? AddOrder(long userId)
         {
-            var orderItems = cartRepo.GetUserCart(userId);
+            var cartItems = cartRepo.GetUserCart(userId);
+            cartItems = UpdateCart(cartItems);
             var orderId = -1;
-            if (orderItems != null)
+            if (cartItems != null)
             {
-                var totalSum = ReserveGoods(userId);
+                var totalSum = ReserveGoods(cartItems);
                 orderId = orderRepo.AddOrder(userId, totalSum);
-                foreach (var item in orderItems)
+                foreach (var item in cartItems)
                 {
                     orderRepo.AddOrderItems(orderId, item.GoodId, goodsRepo.GetGood(item.GoodId).Price, item.Quantity);
                 }
@@ -346,6 +333,20 @@ namespace BLL
             {
                 return null;
             }
+        }
+
+        private List<Cart> UpdateCart(List<Cart> cartItems)
+        {
+            List<Cart> cart = new List<Cart>();
+            foreach (var good in cartItems)
+            {
+                var Good = goodsRepo.GetGood(good.GoodId);
+                if (Good.Quantity == 0)
+                {
+                    cartItems.Remove(good);
+                }                
+            }
+            return cartItems;
         }
 
         // Возвращаем все товары запрошенного заказа
