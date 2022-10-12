@@ -215,7 +215,6 @@ namespace BLL
                 {
                     goodsRepo.ChangeQuantity(item.GoodId, 0);
                     totalSum = totalSum + currentGood.Price * currentGood.Quantity;
-                    item.Quantity = 0;
                 }
             }
             return totalSum;
@@ -315,10 +314,9 @@ namespace BLL
         // Сформировать заказ
         public Order? AddOrder(long userId)
         {
-            var cartItems = cartRepo.GetUserCart(userId);
-            cartItems = UpdateCart(cartItems);
+            var cartItems = UpdateCart(userId);
             var orderId = -1;
-            if (cartItems != null)
+            if (cartItems.Count() > 0)
             {
                 var totalSum = ReserveGoods(cartItems);
                 orderId = orderRepo.AddOrder(userId, totalSum);
@@ -333,21 +331,7 @@ namespace BLL
             {
                 return null;
             }
-        }
-
-        private List<Cart> UpdateCart(List<Cart> cartItems)
-        {
-            List<Cart> cart = new List<Cart>();
-            foreach (var good in cartItems)
-            {
-                var Good = goodsRepo.GetGood(good.GoodId);
-                if (Good.Quantity == 0)
-                {
-                    cartItems.Remove(good);
-                }                
-            }
-            return cartItems;
-        }
+        }             
 
         // Возвращаем все товары запрошенного заказа
         public List<OrderItems> GetOrderItems(int orderId)
@@ -359,6 +343,22 @@ namespace BLL
         public List<Order> GetOrders(long userId)
         {
             return orderRepo.GetUserOrders(userId);
+        }
+
+        // Возвращаем содержие корзины с учетом текущего остатка товаров
+        private List<Cart> UpdateCart(long userId)
+        {
+            var userCart = cartRepo.GetUserCart(userId);
+            foreach (var item in userCart)
+            {
+                var good = goodsRepo.GetGood(item.GoodId);
+
+                if (good.Quantity == 0)
+                {
+                    cartRepo.AddQuantity(userId, good.Id, -item.Quantity);
+                }
+            }
+            return cartRepo.GetUserCart(userId);
         }
 
         #endregion

@@ -587,25 +587,31 @@ async Task Checkout(ITelegramBotClient botClient, CallbackQuery callbackQuery)
 {
     var id = callbackQuery.Message.Chat.Id;
     var currentOrder = settings.AddOrder(id);
-    var orderItems = settings.GetOrderView(currentOrder.Id);
-
-    await botClient.SendTextMessageAsync(callbackQuery.Message.Chat.Id, "Ваш заказ:");
-    await botClient.SendTextMessageAsync(
-        chatId: callbackQuery.Message.Chat.Id,
-        text: $"<b>Order id: {currentOrder.Id}</b>{Environment.NewLine}Total Sum: <b>{currentOrder.TotalSum} rub</b>{Environment.NewLine}Created: {currentOrder.CreatedDate}",
-        parseMode: ParseMode.Html,
-        disableNotification: true);
-    await botClient.SendTextMessageAsync(callbackQuery.Message.Chat.Id, "Список товаров заказа:");
-
-    foreach (var item in orderItems)
+    if (currentOrder != null)
     {
+        var orderItems = settings.GetOrderView(currentOrder.Id);
+        await botClient.SendTextMessageAsync(callbackQuery.Message.Chat.Id, "Ваш заказ:");
         await botClient.SendTextMessageAsync(
-        chatId: callbackQuery.Message.Chat.Id,
-        text: $"ID-{item.GoodId}{Environment.NewLine}Name: <b>{item.GoodName}</b>{Environment.NewLine}Price: {item.GoodPrice} rub{Environment.NewLine}Quantity: {item.Quantity}",
-        parseMode: ParseMode.Html,
-        disableNotification: true);
-    }
+            chatId: callbackQuery.Message.Chat.Id,
+            text: $"<b>Order id: {currentOrder.Id}</b>{Environment.NewLine}Total Sum: <b>{currentOrder.TotalSum} rub</b>{Environment.NewLine}Created: {currentOrder.CreatedDate}",
+            parseMode: ParseMode.Html,
+            disableNotification: true);
+        await botClient.SendTextMessageAsync(callbackQuery.Message.Chat.Id, "Список товаров заказа:");
 
+        foreach (var item in orderItems)
+        {
+            await botClient.SendTextMessageAsync(
+            chatId: callbackQuery.Message.Chat.Id,
+            text: $"ID-{item.GoodId}{Environment.NewLine}Name: <b>{item.GoodName}</b>{Environment.NewLine}Price: {item.GoodPrice} rub{Environment.NewLine}Quantity: {item.Quantity}",
+            parseMode: ParseMode.Html,
+            disableNotification: true);
+        }
+    }
+    else
+    {
+        await botClient.SendTextMessageAsync(callbackQuery.Message.Chat.Id, "В корзине нет товаров, доступных к заказу!");
+    }
+     
     List<Menu> orderMenu = JsonSerializer.Deserialize<List<Menu>>(settings.LoadOrderMenu());
     List<InlineKeyboardButton> buttons = new List<InlineKeyboardButton>();
 
