@@ -90,6 +90,7 @@ async Task HandleUpdatesAsync(ITelegramBotClient botClient, Update update, Cance
         switch (update.Type)
         {
             case (UpdateType.Message):
+                await SayHello(botClient, update.Message);
                 await BotOnMessageReceived(botClient, update.Message);
                 break;
             case (UpdateType.CallbackQuery):
@@ -101,6 +102,13 @@ async Task HandleUpdatesAsync(ITelegramBotClient botClient, Update update, Cance
     {
         Console.WriteLine(ex.Message);
     }
+}
+
+async Task SayHello(ITelegramBotClient botClient, Message? message)
+{
+    var userName = message.Chat.FirstName;
+    await botClient.SendTextMessageAsync((message.Chat.Id), $"Привет, {userName}! Ты как раз вовремя, у нас отличная коллекция, добро пожаловать в наш магазин!");
+    Console.WriteLine($"{userName} starts bot");
 }
 
 async Task BotOnMessageReceived(ITelegramBotClient botClient, Message? message)
