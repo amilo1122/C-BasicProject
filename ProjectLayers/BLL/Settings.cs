@@ -146,6 +146,20 @@ namespace BLL
         {
             return goodsRepo.ChangeGoodUrl(id, url);
         }
+
+        // Проверяем товар на нулевое доступное количество
+        public bool isAvailableToBuy(int goodId)
+        {
+            var good = goodsRepo.GetGood(goodId);
+            if (good.Quantity > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
               
         #endregion
 

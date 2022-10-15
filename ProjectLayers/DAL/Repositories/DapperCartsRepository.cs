@@ -77,7 +77,7 @@ namespace DAL.Repositories
         }
 
         // Возвращаем корзину пользователя для модели GoodView
-        public List<GoodView> GetUserCartGoodView(long userId)
+        public List<GoodView>? GetUserCartGoodView(long userId)
         {
             using (var connection = new NpgsqlConnection(connectionString))
             {

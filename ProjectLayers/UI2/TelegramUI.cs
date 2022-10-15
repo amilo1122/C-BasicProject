@@ -689,7 +689,7 @@ async Task ChangeCart(ITelegramBotClient botClient, CallbackQuery callbackQuery)
 // Выводим корзину текущиего пользователя
 async Task DisplayCart(ITelegramBotClient botClient, CallbackQuery callbackQuery)
 {
-    List<Menu> cartMenu = JsonSerializer.Deserialize<List<Menu>>(settings.LoadCartMenu());
+    List<Menu>? cartMenu = JsonSerializer.Deserialize<List<Menu>>(settings.LoadCartMenu());
     List<InlineKeyboardButton> buttons = new List<InlineKeyboardButton>();
 
     var id = callbackQuery.Message.Chat.Id;
@@ -699,19 +699,33 @@ async Task DisplayCart(ITelegramBotClient botClient, CallbackQuery callbackQuery
     decimal totalPrice = 0;
     foreach (var cart in userCart)
     {
+        var text = "";
+        if (settings.isAvailableToBuy(cart.GoodId))
+        {
+            text = $"--{cart.GoodId}-- <b>{cart.GoodName}</b> - {cart.GoodPrice} руб. - {cart.Quantity} шт. - <b>{cart.GoodPrice * cart.Quantity} руб.</b>";
+        }
+        else
+        {
+            cart.Quantity = 0;
+            text = $"<strike>--{cart.GoodId}-- <b>{cart.GoodName}</b> - {cart.GoodPrice} руб. - {cart.Quantity} шт. - <b>{cart.GoodPrice * cart.Quantity} руб.</b></strike> Товар недоступен к заказу";
+        }
         await botClient.SendTextMessageAsync(
         chatId: callbackQuery.Message.Chat.Id,
-        text: $"--{cart.GoodId}-- <b>{cart.GoodName}</b> - {cart.GoodPrice} руб. - {cart.Quantity} шт. - <b>{cart.GoodPrice * cart.Quantity} руб.</b>",
+        text: text,
         parseMode: ParseMode.Html,
         disableNotification: true);
         totalPrice += cart.GoodPrice * cart.Quantity;
+
     }
 
-    foreach(var button in cartMenu)
+    if (cartMenu != null)
     {
-        buttons.Add(InlineKeyboardButton.WithCallbackData(text: button.Name, callbackData: button.Callback));
+        foreach (var button in cartMenu)
+        {
+            buttons.Add(InlineKeyboardButton.WithCallbackData(text: button.Name, callbackData: button.Callback));
+        }
     }
-
+    
     await botClient.SendTextMessageAsync(
     chatId: callbackQuery.Message.Chat.Id,
     text: $"<b>Общая сумма: </b> - <u>{totalPrice} руб.</u>",
